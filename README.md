@@ -7,6 +7,8 @@ This plugin was created as I had some unique workflows that Logseq templates wer
 
 Button templates allow the adding of templates using a button, while normal templates work like regular templates. A list of supported syntaxes can be found below.
 
+![](screenshots/demo.gif)
+
 # Instructions
 
 ## Creating the PowerBlocks
