@@ -13,9 +13,9 @@ export default async function processPowerBlock(content: string) {
       (await logseq.Editor.getCurrentBlock())!.parent.id
     );
 
-    const referenceDate = !page?.journal
+    const referenceDate = !page!["journal?"]
       ? new Date()
-      : new Date(getDateFromJournalDay(page.journalDay!));
+      : new Date(getDateFromJournalDay(page!.journalDay!));
 
     const date = chrono.parseDate(dateToParse, referenceDate);
 
