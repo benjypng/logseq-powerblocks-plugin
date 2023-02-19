@@ -1,0 +1,35 @@
+{
+  "logseq": {
+    "id": "logseq-powerblocks-plugin",
+    "title": "logseq-powerblocks-plugin",
+    "icon": "./icon.svg"
+  },
+  "version": "0.0.1",
+  "name": "logseq-powerblocks-plugin",
+  "author": "hkgnp",
+  "license": "MIT",
+  "main": "dist/index.html",
+  "targets": {
+    "main": false
+  },
+  "scripts": {
+    "build": "rm -R dist && echo 'dist folder removed'; postcss src/tailwind.css -o src/App.css && parcel build --no-source-maps src/index.html --public-url ./"
+  },
+  "dependencies": {
+    "@logseq/libs": "^0.0.14",
+    "chrono-node": "^2.5.0",
+    "logseq-dateutils": "^0.0.26",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwindcss": "^3.2.4"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "cssnano": "^5.1.14",
+    "parcel": "^2.8.3",
+    "postcss": "^8.4.21",
+    "postcss-cli": "^10.1.0"
+  }
+}
