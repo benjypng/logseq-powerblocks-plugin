@@ -14,10 +14,13 @@ export default function InputBox(props: {
     setInputValues({ ...inputValues, [e.target.name]: e.target.value });
   }
 
-  async function handleSubmit() {
+  async function handleSubmit(e) {
+    e.preventDefault();
     logseq.hideMainUI();
     await handlePowerBlocks("button", props.uuid, props.pBlkId, inputValues);
-    setInputValues({});
+    props.inputArr.map((i) => {
+      setInputValues({ [`${i}`]: "" });
+    });
   }
 
   function getPlaceholder(content: string) {
@@ -40,6 +43,7 @@ export default function InputBox(props: {
             placeholder={getPlaceholder(i)}
             name={i}
             onChange={handleChange}
+            value={inputValues[i]}
           />
         ))}
         <button className="py-1 px-2" onClick={handleSubmit}>
