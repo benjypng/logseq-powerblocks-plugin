@@ -57,18 +57,17 @@ async function main() {
     if (!type.startsWith(":powerblocks_")) return;
 
     logseq.provideModel({
-      async render() {
-        console.log("HELLO");
+      [`pb-${slot}`]: async function () {
+        logseq.Editor.getBlock(uuid).then((e) => console.log(e));
         handlePowerBlocks("button", uuid, pBlkId);
       },
     });
 
-    const uniqueId = generateUniqueId();
     logseq.provideUI({
-      key: `${uniqueId}_${slot}`,
+      key: slot,
       slot,
       reset: true,
-      template: `<button data-slot-id=${uniqueId}_${slot} data-on-click="render" class="powerblocks-btn">${pBlkId}</button>`,
+      template: `<button data-slot-id=${slot} data-on-click="pb-${slot}" class="powerblocks-btn">${pBlkId}</button>`,
     });
   });
 }
