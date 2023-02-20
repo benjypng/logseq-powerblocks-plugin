@@ -1,13 +1,16 @@
 import "@logseq/libs";
 import React from "react";
 import ReactDOM from "react-dom";
-import { BlockCursorPosition } from "@logseq/libs/dist/LSPlugin.user";
+import {
+  BlockCursorPosition,
+  BlockEntity,
+} from "@logseq/libs/dist/LSPlugin.user";
 import handleClosePopup from "./handlePopup";
 import PowerBlockMenu from "./components/PowerBlockMenu";
-import generateUniqueId from "./utils/generateUniqueId";
 import getPowerBlocks from "./services/getPowerBlocks";
 import "./App.css";
 import handlePowerBlocks from "./services/handlePowerBlocks";
+import InputBox from "./components/InputBox";
 
 async function main() {
   console.log("logseq-powerblocks-plugin loaded");
@@ -58,8 +61,41 @@ async function main() {
 
     logseq.provideModel({
       [`pb-${slot}`]: async function () {
-        logseq.Editor.getBlock(uuid).then((e) => console.log(e));
-        handlePowerBlocks("button", uuid, pBlkId);
+        const { pBlk } = await getPowerBlocks(pBlkId);
+
+        // Recursively go through all child blocks of the power block and locate an input block. If there is an input block, popup an Input and pass the content below
+        let inputArr: string[] = [];
+        function findInput(arr: BlockEntity[]) {
+          for (const i of arr) {
+            if (i.content.includes("<%INPUT:") && i.content.includes("%>")) {
+              const regexp = /\<\%INPUT\:(.*?)\%\>/;
+              const matched = regexp.exec(i.content);
+              inputArr.push(matched![0]);
+            }
+
+            if (i.children!.length > 0) {
+              findInput(i.children as BlockEntity[]);
+            }
+          }
+        }
+        findInput(pBlk.children);
+
+        if (inputArr.length > 0) {
+          logseq.showMainUI();
+          ReactDOM.render(
+            <React.StrictMode>
+              <InputBox
+                uuid={uuid}
+                inputArr={inputArr}
+                pBlkId={pBlkId}
+                pBlk={pBlk}
+              />
+            </React.StrictMode>,
+            document.getElementById("app")
+          );
+        } else {
+          handlePowerBlocks("button", uuid, pBlkId);
+        }
       },
     });
 

@@ -5,7 +5,8 @@ import processPowerBlock from "./processPowerBlock";
 export default async function handlePowerBlocks(
   type: string,
   uuid: string,
-  pBlkId: string
+  pBlkId: string,
+  input?: any
 ) {
   // All powerblocks templates and buttons are handled using this function.
   // For buttons, the first block should replace {{renderer}}
@@ -22,7 +23,7 @@ export default async function handlePowerBlocks(
       try {
         const blk = await logseq.Editor.insertBlock(
           uuid,
-          await processPowerBlock(i.content),
+          await processPowerBlock(i.content, input),
           { sibling: false }
         );
 
@@ -44,7 +45,10 @@ export default async function handlePowerBlocks(
     for (let i = 0; i < pBlk.children.length; i++) {
       if (i === 0) {
         try {
-          const content = await processPowerBlock(pBlk.children[i].content);
+          const content = await processPowerBlock(
+            pBlk.children[i].content,
+            input
+          );
           await logseq.Editor.updateBlock(
             uuid,
             blk!.content.replace(
@@ -61,7 +65,10 @@ export default async function handlePowerBlocks(
         }
       } else {
         try {
-          const content = await processPowerBlock(pBlk.children[i].content);
+          const content = await processPowerBlock(
+            pBlk.children[i].content,
+            input
+          );
           tempBlk = await logseq.Editor.insertBlock(tempBlk!.uuid, content, {
             before: false,
             sibling: true,
