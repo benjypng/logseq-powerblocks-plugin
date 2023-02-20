@@ -58,16 +58,17 @@ async function main() {
 
     logseq.provideModel({
       async render() {
+        console.log("HELLO");
         handlePowerBlocks("button", uuid, pBlkId);
       },
     });
 
     const uniqueId = generateUniqueId();
     logseq.provideUI({
-      key: uniqueId,
+      key: `${uniqueId}_${slot}`,
       slot,
       reset: true,
-      template: `<button data-slot-id=${uniqueId} data-on-click="render" class="powerblocks-btn">${pBlkId}</button>`,
+      template: `<button data-slot-id=${uniqueId}_${slot} data-on-click="render" class="powerblocks-btn">${pBlkId}</button>`,
     });
   });
 }
