@@ -23,7 +23,7 @@ export default async function handlePowerBlocks(
       try {
         const blk = await logseq.Editor.insertBlock(
           uuid,
-          await processPowerBlock(i.content, input),
+          await processPowerBlock(i.content, input ?? ""),
           { sibling: false }
         );
 
@@ -47,8 +47,9 @@ export default async function handlePowerBlocks(
         try {
           const content = await processPowerBlock(
             pBlk.children[i].content,
-            input
+            input ?? ""
           );
+
           await logseq.Editor.updateBlock(
             uuid,
             blk!.content.replace(
@@ -67,7 +68,7 @@ export default async function handlePowerBlocks(
         try {
           const content = await processPowerBlock(
             pBlk.children[i].content,
-            input
+            input ?? ""
           );
           tempBlk = await logseq.Editor.insertBlock(tempBlk!.uuid, content, {
             before: false,

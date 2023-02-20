@@ -4,9 +4,11 @@ import getDateFromJournalDay from "../utils/getDateFromJournalDay";
 import { getDateForPage } from "logseq-dateutils";
 
 export default async function processPowerBlock(content: string, input?: any) {
-  if (input && content.includes("<%INPUT:") && content.includes("%>")) {
-    //@ts-expect-error
-    Object.entries(input).map((i) => (content = content.replace(i[0], i[1])));
+  if (input !== "") {
+    if (content.includes("<%INPUT:") && content.includes("%>")) {
+      //@ts-expect-error
+      Object.entries(input).map((i) => (content = content.replace(i[0], i[1])));
+    }
   }
 
   if (content.includes("<%DATE:") && content.includes("%>")) {
