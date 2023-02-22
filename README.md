@@ -39,6 +39,9 @@ Button templates allow the adding of templates using a button, while normal temp
 
 Below is the list of available syntaxes. I may consider adding to the list, but as I am not sure how useful anyone will find this plugin, it is likely only syntaxes I use will be added.
 
+- `<%PB:time%>`
+  Inserts a powerblock in your template, e.g. "time". This only works for buttons.
+
 - `<%DATE:next tuesday%>`
   In this example, if the template is used on a journal page, it will be relative to the journal day. But if used on a page, it will be relative to today.
 
@@ -53,6 +56,9 @@ Below is the list of available syntaxes. I may consider adding to the list, but 
 
 - `<%INPUT:How are you feeling today?%>`
   When including this syntax in a block, there will be an input where the placeholder will appear in the prompt. After submitting it, the values will be added to your template.
+
+- `<%RANDOMTAG:quotes%>`
+  Use this syntax to get a random block that is tagged. In the above example, it will return a random block that is tagged with "quotes", or belongs to a page called "quotes".
 
 # Credits
 

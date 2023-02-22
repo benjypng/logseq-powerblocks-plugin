@@ -61,6 +61,31 @@ export default async function processPowerBlock(content: string, input?: any) {
     }
   }
 
+  if (content.includes("<%RANDOMTAG:") && content.includes("%>")) {
+    const regexp = /\<\%(.*?)\%\>/;
+    const matched = regexp.exec(content);
+
+    const tag = matched![1].replace("RANDOMTAG:", "");
+    content = content.replace(
+      matched![0],
+      `
+												#+BEGIN_QUERY
+												{:title [:h2 "Random Quote 🎙"]
+												 :query [:find (pull ?b [*])
+												         :where
+												         [?p :block/name "${tag}"]
+												         (or [?b :block/refs ?p]
+												         [?b :block/page ?p])
+												    ]
+												 :result-transform (fn [result]
+												         [(rand-nth result)])
+												 :breadcrumb-show? false
+												}
+												#+END_QUERY
+			`
+    );
+  }
+
   // Handle replacement of template strings
   const templateStrArr = [
     {
@@ -68,9 +93,15 @@ export default async function processPowerBlock(content: string, input?: any) {
       tValue: getTime(),
       type: "replace",
     },
+    {
+      tKey: "<%TIMEAMPM%>",
+      tValue: getTime("ampm"),
+      type: "replace",
+    },
   ];
 
   for (const t of templateStrArr) {
+    //@ts-expect-error
     content = content.replace(t.tKey, t.tValue);
   }
 
