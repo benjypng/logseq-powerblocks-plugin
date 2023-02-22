@@ -54,6 +54,9 @@ Below is the list of available syntaxes. I may consider adding to the list, but 
 - `<%TIME%>`
   This simply replaces the syntax with the current time.
 
+- `<%TIMEAMPM%>`
+  This adds in time but in AM/PM format.
+
 - `<%INPUT:How are you feeling today?%>`
   When including this syntax in a block, there will be an input where the placeholder will appear in the prompt. After submitting it, the values will be added to your template.
 
