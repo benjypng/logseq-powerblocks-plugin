@@ -12,7 +12,6 @@ import "./App.css";
 import handlePowerBlocks from "./services/handlePowerBlocks";
 import InputBox from "./components/InputBox";
 import settings from "./services/settings";
-import observerCallback from "./services/observerCallback";
 
 async function main() {
   console.log("logseq-powerblocks-plugin loaded");
