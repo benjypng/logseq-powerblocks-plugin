@@ -102,7 +102,7 @@ export default async function processPowerBlock(content: string, input?: any) {
 
   for (const t of templateStrArr) {
     //@ts-expect-error
-    content = content.replace(t.tKey, t.tValue);
+    content = content.replaceAll(t.tKey, t.tValue);
   }
 
   // Handle inline power blocks

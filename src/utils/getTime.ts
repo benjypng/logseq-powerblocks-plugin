@@ -6,7 +6,8 @@ export default function getTime(flag?: string) {
     const mins = d.getMinutes() < 10 ? "0" + d.getMinutes() : d.getMinutes();
     return `${hours}:${mins}`;
   } else if (flag === "ampm") {
-    let ampm = d.getHours() > 12 ? "pm" : "am";
-    return `${d.getHours()}:${d.getMinutes()} ${ampm}`;
+    const ampm = d.getHours() > 11 ? "pm" : "am";
+    const newHours = d.getHours() > 12 ? d.getHours() - 12 : d.getHours();
+    return `${newHours}:${d.getMinutes()} ${ampm}`;
   }
 }

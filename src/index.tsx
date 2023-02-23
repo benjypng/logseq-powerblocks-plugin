@@ -11,6 +11,8 @@ import getPowerBlocks from "./services/getPowerBlocks";
 import "./App.css";
 import handlePowerBlocks from "./services/handlePowerBlocks";
 import InputBox from "./components/InputBox";
+import settings from "./services/settings";
+import observerCallback from "./services/observerCallback";
 
 async function main() {
   console.log("logseq-powerblocks-plugin loaded");
@@ -106,6 +108,26 @@ async function main() {
       template: `<button data-slot-id=${slot} data-on-click="pb-${slot}" class="powerblocks-btn">${pBlkId}</button>`,
     });
   });
+
+  if (logseq.settings!.autoParse) {
+    logseq.DB.onChanged(async function ({ blocks }) {
+      if (blocks.length === 2) {
+        if (
+          blocks[0].content.startsWith("{{{") &&
+          blocks[0].content.endsWith("}}}")
+        ) {
+          try {
+            const pBlkId = blocks[0].content
+              .replace("{{{", "")
+              .replace("}}}", "");
+            await handlePowerBlocks("template", blocks[0].uuid, pBlkId);
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      }
+    });
+  }
 }
 
-logseq.ready(main).catch(console.error);
+logseq.useSettingsSchema(settings).ready(main).catch(console.error);
