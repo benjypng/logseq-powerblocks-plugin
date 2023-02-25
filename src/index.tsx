@@ -46,6 +46,7 @@ async function main() {
             uuid={e.uuid}
           />
         </React.StrictMode>,
+        //@ts-expect-error
         document.getElementById("app")
       );
     } else {
@@ -118,7 +119,8 @@ async function main() {
           try {
             const pBlkId = blocks[0].content
               .replace("{{{", "")
-              .replace("}}}", "");
+              .replace("}}}", "")
+              .trim();
             await handlePowerBlocks("template", blocks[0].uuid, pBlkId);
           } catch (e) {
             console.log(e);

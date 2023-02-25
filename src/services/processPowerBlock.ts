@@ -26,7 +26,7 @@ export default async function processPowerBlock(content: string, input?: any) {
 
     const date = chrono.parseDate(dateToParse, referenceDate);
 
-    content = content.replace(
+    content = content.replaceAll(
       matched![0],
       getDateForPage(
         date,
@@ -43,7 +43,7 @@ export default async function processPowerBlock(content: string, input?: any) {
     const dayInInteger = new Date().getDay();
 
     if (checker === dayInInteger) {
-      content = content.replace(matched![0], "");
+      content = content.replaceAll(matched![0], "");
     } else {
       throw new Error("Day is not matched");
     }
@@ -55,7 +55,7 @@ export default async function processPowerBlock(content: string, input?: any) {
     const monthInInteger = new Date().getMonth();
 
     if (checker === monthInInteger) {
-      content = content.replace(matched![0], "");
+      content = content.replaceAll(matched![0], "");
     } else {
       throw new Error("Month is not matched");
     }
@@ -66,7 +66,7 @@ export default async function processPowerBlock(content: string, input?: any) {
     const matched = regexp.exec(content);
 
     const tag = matched![1].replace("RANDOMTAG:", "");
-    content = content.replace(
+    content = content.replaceAll(
       matched![0],
       `
 												#+BEGIN_QUERY
@@ -101,7 +101,6 @@ export default async function processPowerBlock(content: string, input?: any) {
   ];
 
   for (const t of templateStrArr) {
-    //@ts-expect-error
     content = content.replaceAll(t.tKey, t.tValue);
   }
 
@@ -113,7 +112,7 @@ export default async function processPowerBlock(content: string, input?: any) {
 
     // Parse matched[1]
     const pbToRender = matched![1].replace("PB:", "").trim();
-    content = content.replace(
+    content = content.replaceAll(
       matched![0],
       `{{renderer :powerblocks_, ${pbToRender}}}`
     );
