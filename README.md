@@ -51,6 +51,12 @@ Below is the list of available syntaxes. I may consider adding to the list, but 
 - `<%IFMONTHOFYEAR:2%>`
   Block containing this syntax will only be added if the month of the year matches the syntax. 0 is January, 1 is February and so on.
 
+- `<%IFDATE:tomorrow%>`
+  Block containing this syntax will only be added if the date mentioned in the block matches the current date.
+
+- `<%DAY%>`
+  This simply replaces the syntax with the current day.
+
 - `<%TIME%>`
   This simply replaces the syntax with the current time.
 
