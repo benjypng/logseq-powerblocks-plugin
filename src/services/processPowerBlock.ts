@@ -1,7 +1,7 @@
 import getTime from "../utils/getTime";
 import * as chrono from "chrono-node";
 import getDateFromJournalDay from "../utils/getDateFromJournalDay";
-import { getDateForPage } from "logseq-dateutils";
+import { getDateForPage, getDayInText } from "logseq-dateutils";
 
 export default async function processPowerBlock(content: string, input?: any) {
   if (input !== "") {
@@ -96,6 +96,11 @@ export default async function processPowerBlock(content: string, input?: any) {
     {
       tKey: "<%TIMEAMPM%>",
       tValue: getTime("ampm"),
+      type: "replace",
+    },
+    {
+      tKey: "<%DAY%>",
+      tValue: getDayInText(new Date()),
       type: "replace",
     },
   ];
