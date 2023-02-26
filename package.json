@@ -4,7 +4,7 @@
     "title": "logseq-powerblocks-plugin",
     "icon": "./icon.svg"
   },
-  "version": "0.0.13-alpha",
+  "version": "0.0.14-alpha",
   "name": "logseq-powerblocks-plugin",
   "author": "hkgnp",
   "license": "MIT",

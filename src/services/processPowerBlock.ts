@@ -2,6 +2,7 @@ import getTime from "../utils/getTime";
 import * as chrono from "chrono-node";
 import getDateFromJournalDay from "../utils/getDateFromJournalDay";
 import { getDateForPage, getDayInText } from "logseq-dateutils";
+import getDateInYYYYMMDD from "../utils/getDateInYYYYMMDD";
 
 export default async function processPowerBlock(content: string, input?: any) {
   if (input !== "") {
@@ -58,6 +59,19 @@ export default async function processPowerBlock(content: string, input?: any) {
       content = content.replaceAll(matched![0], "");
     } else {
       throw new Error("Month is not matched");
+    }
+  }
+
+  if (content.includes("<%IFDATE:") && content.includes("%>")) {
+    const regexp = /\<\%(.*?)\%\>/;
+    const matched = regexp.exec(content);
+
+    const dateToCheck = chrono.parseDate(matched![1].replace("IFDATE:", ""));
+
+    if (getDateInYYYYMMDD(dateToCheck) === getDateInYYYYMMDD(new Date())) {
+      content = content.replaceAll(matched![0], "");
+    } else {
+      throw new Error("Date is not matched");
     }
   }
 
