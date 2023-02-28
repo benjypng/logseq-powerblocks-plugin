@@ -113,6 +113,7 @@ async function main() {
     logseq.DB.onChanged(async function ({ blocks }) {
       if (blocks.length === 2) {
         if (
+          blocks[0].content &&
           blocks[0].content.startsWith("{{{") &&
           blocks[0].content.endsWith("}}}")
         ) {

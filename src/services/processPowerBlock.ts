@@ -1,15 +1,86 @@
 import getTime from "../utils/getTime";
-import * as chrono from "chrono-node";
 import getDateFromJournalDay from "../utils/getDateFromJournalDay";
 import { getDateForPage, getDayInText } from "logseq-dateutils";
-import getDateInYYYYMMDD from "../utils/getDateInYYYYMMDD";
 import checkIfCondition from "./checkIfCondition";
+import * as chrono from "chrono-node";
 
 export default async function processPowerBlock(content: string, input?: any) {
   if (input !== "") {
     if (content.includes("<%INPUT:") && content.includes("%>")) {
       //@ts-expect-error
       Object.entries(input).map((i) => (content = content.replace(i[0], i[1])));
+    }
+  }
+
+  if (content.includes("<%AND") && content.includes("%>")) {
+    const regexp = /\<\%AND(.*)\%\>/;
+    const matched = regexp.exec(content);
+    const checkerArr = matched[1]
+      .split("%>")
+      .map((i) => i.replace("<%", "").trim())
+      .filter((i) => i.length > 0);
+
+    let state: boolean = true;
+    for (const i of checkerArr) {
+      state = checkIfCondition(i);
+      if (state === false) break;
+    }
+
+    if (state) {
+      content = content.replace(matched![0], "");
+      return content;
+    } else {
+      return "";
+    }
+  } else if (content.includes("<%OR") && content.includes("%>")) {
+    const regexp = /\<\%OR(.*)\%\>/;
+    const matched = regexp.exec(content);
+    const checkerArr = matched[1]
+      .split("%>")
+      .map((i) => i.replace("<%", "").trim())
+      .filter((i) => i.length > 0);
+
+    let state: boolean = false;
+    for (const i of checkerArr) {
+      state = checkIfCondition(i);
+      if (state === true) break;
+    }
+    if (state) {
+      content = content.replace(matched![0], "");
+      return content;
+    } else {
+      return "";
+    }
+  }
+
+  if (content.includes("<%IFDAYOFWEEK:") && content.includes("%>")) {
+    const regexp = /\<\%(.*?)\%\>/;
+    const matched = regexp.exec(content);
+    if (checkIfCondition(matched[1])) {
+      content = content.replaceAll(matched![0], "");
+    } else {
+      return "";
+    }
+  }
+
+  if (content.includes("<%IFMONTHOFYEAR:") && content.includes("%>")) {
+    const regexp = /\<\%(.*?)\%\>/;
+    const matched = regexp.exec(content);
+    if (checkIfCondition(matched[1])) {
+      content = content.replaceAll(matched![0], "");
+    } else {
+      return "";
+    }
+  }
+
+  if (content.includes("<%IFDATE:") && content.includes("%>")) {
+    const regexp = /\<\%(.*?)\%\>/;
+    const matched = regexp.exec(content);
+
+    if ((checkIfCondition(matched[1]), true)) {
+      content = content.replaceAll(matched![0], "");
+    } else {
+      return "";
     }
   }
 
@@ -35,75 +106,6 @@ export default async function processPowerBlock(content: string, input?: any) {
         (await logseq.App.getUserConfigs()).preferredDateFormat
       )
     );
-  }
-
-  if (content.includes("<%AND") && content.includes("%>")) {
-    const regexp = /\<\%AND(.*)\%\>/;
-    const matched = regexp.exec(content);
-    const checkerArr = matched[1]
-      .split("%>")
-      .map((i) => i.replace("<%", "").trim())
-      .filter((i) => i.length > 0);
-
-    let state: boolean = true;
-    for (const i of checkerArr) {
-      state = checkIfCondition(i);
-      if (state === false) break;
-    }
-
-    if (state) {
-      content = content.replace(matched![0], "");
-    } else {
-      return;
-    }
-  } else if (content.includes("<%OR") && content.includes("%>")) {
-    const regexp = /\<\%OR(.*)\%\>/;
-    const matched = regexp.exec(content);
-    const checkerArr = matched[1]
-      .split("%>")
-      .map((i) => i.replace("<%", "").trim())
-      .filter((i) => i.length > 0);
-
-    let state: boolean = false;
-    for (const i of checkerArr) {
-      state = checkIfCondition(i);
-      if (state === true) break;
-    }
-
-    if (state) {
-      content = content.replace(matched![0], "");
-    } else {
-      return;
-    }
-  }
-
-  if (content.includes("<%IFDAYOFWEEK:") && content.includes("%>")) {
-    const regexp = /\<\%(.*?)\%\>/;
-    const matched = regexp.exec(content);
-    if (checkIfCondition(matched[1])) {
-      content = content.replaceAll(matched![0], "");
-    }
-  }
-
-  if (content.includes("<%IFMONTHOFYEAR:") && content.includes("%>")) {
-    const regexp = /\<\%(.*?)\%\>/;
-    const matched = regexp.exec(content);
-    if (checkIfCondition(matched[1])) {
-      content = content.replaceAll(matched![0], "");
-    }
-  }
-
-  if (content.includes("<%IFDATE:") && content.includes("%>")) {
-    const regexp = /\<\%(.*?)\%\>/;
-    const matched = regexp.exec(content);
-
-    const dateToCheck = chrono.parseDate(matched![1].replace("IFDATE:", ""));
-
-    if (getDateInYYYYMMDD(dateToCheck) === getDateInYYYYMMDD(new Date())) {
-      content = content.replaceAll(matched![0], "");
-    } else {
-      throw new Error("Date is not matched");
-    }
   }
 
   if (content.includes("<%RANDOMTAG:") && content.includes("%>")) {

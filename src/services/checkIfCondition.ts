@@ -1,33 +1,47 @@
-export default function checkIfCondition(matched: string) {
+import * as chrono from "chrono-node";
+import getDateInYYYYMMDD from "../utils/getDateInYYYYMMDD";
+
+export default function checkIfCondition(matched: string, nlp?: boolean) {
   const checkerObj = {
     ["IFDAYOFWEEK"]: "day",
     ["IFMONTHOFYEAR"]: "month",
     ["IFYEAR"]: "year",
     ["IFDATE"]: "date",
   };
-  const checker = parseInt(matched.split(":")[1]);
 
-  let comparator: number;
-  switch (checkerObj[matched.split(":")[0]]) {
-    case "day":
-      comparator = new Date().getDay();
-      break;
+  if (!nlp) {
+    const checker = parseInt(matched.split(":")[1]);
 
-    case "month":
-      comparator = new Date().getMonth();
-      break;
+    let comparator: number;
+    switch (checkerObj[matched.split(":")[0]]) {
+      case "day":
+        comparator = new Date().getDay();
+        break;
 
-    case "year":
-      comparator = new Date().getFullYear();
-      break;
+      case "month":
+        comparator = new Date().getMonth();
+        break;
 
-    default:
-      return;
-  }
+      case "year":
+        comparator = new Date().getFullYear();
+        break;
 
-  if (checker === comparator) {
-    return true;
+      default:
+        return;
+    }
+
+    if (checker === comparator) {
+      return true;
+    } else {
+      return false;
+    }
   } else {
-    return false;
+    const dateToCheck = chrono.parseDate(matched![1].replace("IFDATE:", ""));
+
+    if (getDateInYYYYMMDD(dateToCheck) === getDateInYYYYMMDD(new Date())) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
