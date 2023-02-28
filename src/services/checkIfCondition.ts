@@ -1,4 +1,5 @@
 import * as chrono from "chrono-node";
+import { getWeek, getWeekOfMonth } from "date-fns";
 import getDateInYYYYMMDD from "../utils/getDateInYYYYMMDD";
 
 export default function checkIfCondition(matched: string, nlp?: boolean) {
@@ -6,7 +7,8 @@ export default function checkIfCondition(matched: string, nlp?: boolean) {
     ["IFDAYOFWEEK"]: "day",
     ["IFMONTHOFYEAR"]: "month",
     ["IFYEAR"]: "year",
-    ["IFDATE"]: "date",
+    ["IFWEEKOFMONTH"]: "weekofmonth",
+    ["IFWEEKOFYEAR"]: "weekofyear",
   };
 
   if (!nlp) {
@@ -26,14 +28,21 @@ export default function checkIfCondition(matched: string, nlp?: boolean) {
         comparator = new Date().getFullYear();
         break;
 
+      case "weekofmonth":
+        comparator = getWeekOfMonth(new Date());
+        break;
+
+      case "weekofyear":
+        comparator = getWeek(new Date());
+        break;
+
       default:
         return false;
     }
 
     return checker === comparator;
   } else {
-    const dateToCheck = chrono.parseDate(matched![1].replace("IFDATE:", ""));
-
+    const dateToCheck = chrono.parseDate(matched.split(":")[1]);
     return getDateInYYYYMMDD(dateToCheck) === getDateInYYYYMMDD(new Date());
   }
 }

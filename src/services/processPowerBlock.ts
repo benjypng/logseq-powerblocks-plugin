@@ -3,7 +3,7 @@ import getDateFromJournalDay from "../utils/getDateFromJournalDay";
 import { getDateForPage, getDayInText } from "logseq-dateutils";
 import checkIfCondition from "./checkIfCondition";
 import * as chrono from "chrono-node";
-import { getWeek } from "date-fns";
+import { getWeek, getWeekOfMonth } from "date-fns";
 
 export default async function processPowerBlock(content: string, input?: any) {
   if (input !== "") {
@@ -78,7 +78,7 @@ export default async function processPowerBlock(content: string, input?: any) {
     const regexp = /\<\%(.*?)\%\>/;
     const matched = regexp.exec(content);
 
-    if ((checkIfCondition(matched[1]), true)) {
+    if (checkIfCondition(matched[1], true)) {
       content = content.replaceAll(matched![0], "");
     } else {
       return "";
@@ -86,6 +86,28 @@ export default async function processPowerBlock(content: string, input?: any) {
   }
 
   if (content.includes("<%IFYEAR:") && content.includes("%>")) {
+    const regexp = /\<\%(.*?)\%\>/;
+    const matched = regexp.exec(content);
+
+    if (checkIfCondition(matched[1])) {
+      content = content.replaceAll(matched![0], "");
+    } else {
+      return "";
+    }
+  }
+
+  if (content.includes("<%IFWEEKOFMONTH:") && content.includes("%>")) {
+    const regexp = /\<\%(.*?)\%\>/;
+    const matched = regexp.exec(content);
+
+    if (checkIfCondition(matched[1])) {
+      content = content.replaceAll(matched![0], "");
+    } else {
+      return "";
+    }
+  }
+
+  if (content.includes("<%IFWEEKOFYEAR:") && content.includes("%>")) {
     const regexp = /\<\%(.*?)\%\>/;
     const matched = regexp.exec(content);
 
@@ -165,6 +187,11 @@ export default async function processPowerBlock(content: string, input?: any) {
     {
       tKey: "<%WEEK%>",
       tValue: getWeek(new Date()),
+      type: "replace",
+    },
+    {
+      tKey: "<%WEEKOFMONTH%>",
+      tValue: getWeekOfMonth(new Date()),
       type: "replace",
     },
   ];
