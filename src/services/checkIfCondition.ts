@@ -27,21 +27,13 @@ export default function checkIfCondition(matched: string, nlp?: boolean) {
         break;
 
       default:
-        return;
+        return false;
     }
 
-    if (checker === comparator) {
-      return true;
-    } else {
-      return false;
-    }
+    return checker === comparator;
   } else {
     const dateToCheck = chrono.parseDate(matched![1].replace("IFDATE:", ""));
 
-    if (getDateInYYYYMMDD(dateToCheck) === getDateInYYYYMMDD(new Date())) {
-      return true;
-    } else {
-      return false;
-    }
+    return getDateInYYYYMMDD(dateToCheck) === getDateInYYYYMMDD(new Date());
   }
 }

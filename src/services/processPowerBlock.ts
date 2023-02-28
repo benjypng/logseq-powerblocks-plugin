@@ -3,6 +3,7 @@ import getDateFromJournalDay from "../utils/getDateFromJournalDay";
 import { getDateForPage, getDayInText } from "logseq-dateutils";
 import checkIfCondition from "./checkIfCondition";
 import * as chrono from "chrono-node";
+import { getWeek } from "date-fns";
 
 export default async function processPowerBlock(content: string, input?: any) {
   if (input !== "") {
@@ -84,6 +85,17 @@ export default async function processPowerBlock(content: string, input?: any) {
     }
   }
 
+  if (content.includes("<%IFYEAR:") && content.includes("%>")) {
+    const regexp = /\<\%(.*?)\%\>/;
+    const matched = regexp.exec(content);
+
+    if (checkIfCondition(matched[1])) {
+      content = content.replaceAll(matched![0], "");
+    } else {
+      return "";
+    }
+  }
+
   if (content.includes("<%DATE:") && content.includes("%>")) {
     const regexp = /\<\%(.*?)\%\>/;
     const matched = regexp.exec(content);
@@ -150,9 +162,15 @@ export default async function processPowerBlock(content: string, input?: any) {
       tValue: getDayInText(new Date()),
       type: "replace",
     },
+    {
+      tKey: "<%WEEK%>",
+      tValue: getWeek(new Date()),
+      type: "replace",
+    },
   ];
 
   for (const t of templateStrArr) {
+    //@ts-expect-error
     content = content.replaceAll(t.tKey, t.tValue);
   }
 
