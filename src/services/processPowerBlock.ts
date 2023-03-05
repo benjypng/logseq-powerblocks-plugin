@@ -194,6 +194,26 @@ export default async function processPowerBlock(content: string, input?: any) {
       tValue: getWeekOfMonth(new Date()),
       type: "replace",
     },
+    {
+      tKey: "<%CURRENTPAGENAME%>",
+      tValue: (
+        await logseq.Editor.getPage(
+          (await logseq.Editor.getCurrentBlock())!.parent.id
+        )
+      ).originalName,
+      type: "replace",
+    },
+    {
+      tKey: "<%CURRENTPAGEURL%>",
+      tValue: `logseq://graph/logseq?page=${
+        (
+          await logseq.Editor.getPage(
+            (await logseq.Editor.getCurrentBlock())!.parent.id
+          )
+        ).originalName
+      }`,
+      type: "replace",
+    },
   ];
 
   for (const t of templateStrArr) {
