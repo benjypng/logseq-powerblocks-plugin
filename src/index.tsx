@@ -46,7 +46,6 @@ async function main() {
             uuid={e.uuid}
           />
         </React.StrictMode>,
-        //@ts-expect-error
         document.getElementById("app")
       );
     } else {

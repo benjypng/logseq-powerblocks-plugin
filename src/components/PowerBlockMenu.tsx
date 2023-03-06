@@ -60,6 +60,7 @@ export default function PowerBlockMenu(props: {
             {b.content
               .replace("#powerblocks-button", "⏺")
               .replace("#powerblocks", "📃")
+              .replace("collapsed:: true", "")
               .trim()}
           </button>
         ))}
