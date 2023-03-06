@@ -6,7 +6,11 @@ import * as chrono from "chrono-node";
 import { getWeek, getWeekOfMonth } from "date-fns";
 import getPageName from "./getPageName";
 
-export default async function processPowerBlock(content: string, input?: any) {
+export default async function processPowerBlock(
+  uuid: string,
+  content: string,
+  input?: any
+) {
   if (input !== "") {
     if (content.includes("<%INPUT:") && content.includes("%>")) {
       //@ts-expect-error
@@ -197,12 +201,12 @@ export default async function processPowerBlock(content: string, input?: any) {
     },
     {
       tKey: "<%CURRENTPAGENAME%>",
-      tValue: await getPageName(),
+      tValue: await getPageName(uuid),
       type: "replace",
     },
     {
       tKey: "<%CURRENTPAGEURL%>",
-      tValue: `logseq://graph/logseq?page=${await getPageName()}`,
+      tValue: `logseq://graph/logseq?page=${await getPageName(uuid)}`,
       type: "replace",
     },
   ];

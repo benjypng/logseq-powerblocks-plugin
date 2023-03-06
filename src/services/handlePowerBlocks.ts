@@ -23,7 +23,7 @@ export default async function handlePowerBlocks(
       try {
         const blk = await logseq.Editor.insertBlock(
           uuid,
-          await processPowerBlock(i.content, input ?? ""),
+          await processPowerBlock(uuid, i.content, input ?? ""),
           { sibling: false }
         );
 
@@ -44,6 +44,7 @@ export default async function handlePowerBlocks(
       if (i === 0) {
         try {
           const content = await processPowerBlock(
+            uuid,
             pBlk.children[i].content,
             input ?? ""
           );
@@ -65,6 +66,7 @@ export default async function handlePowerBlocks(
       } else {
         try {
           const content = await processPowerBlock(
+            uuid,
             pBlk.children[i].content,
             input ?? ""
           );
@@ -85,7 +87,7 @@ export default async function handlePowerBlocks(
     // Process template
     for (let b of pBlk.children.reverse()) {
       try {
-        const content = await processPowerBlock(b.content);
+        const content = await processPowerBlock(uuid, b.content);
         const blk = await logseq.Editor.insertBlock(uuid, content, {
           sibling: true,
         });
