@@ -13,8 +13,9 @@ export default async function processPowerBlock(
 ) {
   if (input !== "") {
     if (content.includes("<%INPUT:") && content.includes("%>")) {
-      //@ts-expect-error
-      Object.entries(input).map((i) => (content = content.replace(i[0], i[1])));
+      Object.entries(input).map(
+        (i) => (content = content.replace(i[0], i[1].toString()))
+      );
     }
   }
 
@@ -172,6 +173,18 @@ export default async function processPowerBlock(
     );
   }
 
+  if (content.includes("<%SUM:") && content.includes("%>")) {
+    const regexp = /\<\%(.*?)\%\>/;
+    const matched = regexp.exec(content);
+
+    const varsArr = matched![1]
+      .replace("SUM:", "")
+      .split(",")
+      .map((i) => parseFloat(i))
+      .reduce((a, b) => a + b);
+    content = content.replaceAll(matched[0], varsArr.toString());
+  }
+
   // Handle replacement of template strings
   const templateStrArr = [
     {
@@ -212,8 +225,7 @@ export default async function processPowerBlock(
   ];
 
   for (const t of templateStrArr) {
-    //@ts-expect-error
-    content = content.replaceAll(t.tKey, t.tValue);
+    content = content.replaceAll(t.tKey, t.tValue as string);
   }
 
   // Handle inline power blocks

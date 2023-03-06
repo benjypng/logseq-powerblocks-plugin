@@ -8,12 +8,8 @@ export default function PowerBlockMenu(props: {
   uuid: string;
 }) {
   const containerStyle = {
-    position: "absolute",
-    padding: 3 + "px",
     top: props.rect.top + "px",
     left: props.rect.left + "px",
-    display: "flex",
-    flexDirection: "column",
     zIndex: 99,
   };
 
@@ -48,8 +44,11 @@ export default function PowerBlockMenu(props: {
 
   return (
     <React.Fragment>
-      {/*@ts-expect-error*/}
-      <div style={containerStyle} id="powerblocks-menu">
+      <div
+        id="powerblocks-menu"
+        className="absolute p-3 flex flex-col"
+        style={containerStyle}
+      >
         {props.allPowerBlocks.map((b: BlockEntity) => (
           <button
             autoFocus={true}
