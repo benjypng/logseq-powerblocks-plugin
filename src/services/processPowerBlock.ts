@@ -4,6 +4,7 @@ import { getDateForPage, getDayInText } from "logseq-dateutils";
 import checkIfCondition from "./checkIfCondition";
 import * as chrono from "chrono-node";
 import { getWeek, getWeekOfMonth } from "date-fns";
+import getPageName from "./getPageName";
 
 export default async function processPowerBlock(content: string, input?: any) {
   if (input !== "") {
@@ -196,22 +197,12 @@ export default async function processPowerBlock(content: string, input?: any) {
     },
     {
       tKey: "<%CURRENTPAGENAME%>",
-      tValue: (
-        await logseq.Editor.getPage(
-          (await logseq.Editor.getCurrentBlock())!.parent.id
-        )
-      ).originalName,
+      tValue: await getPageName(),
       type: "replace",
     },
     {
       tKey: "<%CURRENTPAGEURL%>",
-      tValue: `logseq://graph/logseq?page=${
-        (
-          await logseq.Editor.getPage(
-            (await logseq.Editor.getCurrentBlock())!.parent.id
-          )
-        ).originalName
-      }`,
+      tValue: `logseq://graph/logseq?page=${await getPageName()}`,
       type: "replace",
     },
   ];
