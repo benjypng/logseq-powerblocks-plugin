@@ -3,7 +3,7 @@ import getDateFromJournalDay from "../utils/getDateFromJournalDay";
 import { getDateForPage, getDayInText } from "logseq-dateutils";
 import checkIfCondition from "./checkIfCondition";
 import * as chrono from "chrono-node";
-import { getWeek, getWeekOfMonth } from "date-fns";
+import { differenceInCalendarWeeks, getWeek, getWeekOfMonth } from "date-fns";
 import getPageName from "./getPageName";
 
 export default async function processPowerBlock(
@@ -146,6 +146,18 @@ export default async function processPowerBlock(
         (await logseq.App.getUserConfigs()).preferredDateFormat
       )
     );
+  }
+
+  if (content.includes("<%WEEKSSINCEDATE:") && content.includes("%>")) {
+    const regexp = /\<\%(.*?)\%\>/;
+    const matched = regexp.exec(content);
+    const startDate = chrono.parseDate(
+      matched![1].replace("WEEKSSINCEDATE", "").trim()
+    );
+
+    const difference = differenceInCalendarWeeks(new Date(), startDate);
+
+    content = content.replaceAll(matched![0], difference.toString());
   }
 
   if (content.includes("<%RANDOMTAG:") && content.includes("%>")) {

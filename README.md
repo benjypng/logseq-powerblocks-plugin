@@ -73,6 +73,9 @@ Below is the list of available syntaxes. I may consider adding to the list, but 
 - `<$CURRENTPAGEURL%>`
   Get the Logseq URL of the page that this syntax is being used at.
 
+- `<%WEEKSSINCEDATE:28 Feb 1990%>`
+  Get the number of weeks since a specific date (accepts NLP). For the above example, the syntax will return the number of calendar weeks since the 28th of February, 1990.
+
 # Syntaxes (CONDITIONAL)
 
 Below is the list of syntaxes that rely on conditions specified. Blocks with the conditions will only appear if it matches the parameters.
