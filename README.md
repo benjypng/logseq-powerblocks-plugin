@@ -101,4 +101,6 @@ You can use AND OR conditions with the above conditional syntaxes. Below are som
 
 # Credits
 
+Big shoutout to [David Vargas](https://twitter.com/dvargas92495?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor) and the work he has done for Roam's Smart Blocks. Also thanks to [R.J. Nestor](https://twitter.com/rjnestor) for his sharing on how he used Smart Blocks and for inspiring me to do the same in Logseq.
+
 Once again, [chrono-node](https://github.com/wanasit/chrono) for supplying the date parser.
