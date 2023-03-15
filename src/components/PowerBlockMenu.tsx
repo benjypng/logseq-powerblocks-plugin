@@ -52,13 +52,18 @@ export default function PowerBlockMenu(props: {
         {props.allPowerBlocks.map((b: BlockEntity) => (
           <button
             autoFocus={true}
-            value={b.content.trim()}
+            value={b.content
+              .replace("collapsed:: true", "")
+              .replace("collapsed:: false", "")
+              .trim()}
             onClick={insertPowerBlock}
             className="menu-button py-2 px-4 bg-white hover:bg-gray-800 hover:text-white border focus:bg-gray-800 focus:text-white"
           >
             {b.content
               .replace("#powerblocks-button", "⏺")
               .replace("#powerblocks", "📃")
+              .replace("collapsed:: true", "")
+              .replace("collapsed:: false", "")
               .trim()}
           </button>
         ))}
