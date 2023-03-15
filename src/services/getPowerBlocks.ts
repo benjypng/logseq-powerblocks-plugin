@@ -9,13 +9,14 @@ export default async function getPowerBlocks(pBlkId?: string) {
 		 `;
   let powerBlocksArr = await logseq.DB.datascriptQuery(query);
   powerBlocksArr = powerBlocksArr.map((i: BlockEntity[]) => i[0]);
-
   if (pBlkId) {
     let pBlk = powerBlocksArr.filter(
       (i: BlockEntity) =>
         i.content
           .replace("#powerblocks-button", "")
           .replace("#powerblocks", "")
+          .replace("collapsed:: true", "")
+          .replace("collapsed:: false", "")
           .trim() === pBlkId
     )[0];
     pBlk = await logseq.Editor.getBlock(pBlk.uuid, { includeChildren: true });
