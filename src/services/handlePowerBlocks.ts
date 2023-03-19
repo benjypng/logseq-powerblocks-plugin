@@ -101,5 +101,49 @@ export default async function handlePowerBlocks(
     }
 
     await logseq.Editor.removeBlock(uuid);
+  } else if (type === "autoParse") {
+    const blk = await logseq.Editor.getBlock(uuid);
+
+    let tempBlk = blk;
+    for (let i = 0; i < pBlk.children.length; i++) {
+      if (i === 0) {
+        try {
+          const content = await processPowerBlock(
+            uuid,
+            pBlk.children[i].content,
+            input ?? ""
+          );
+
+          await logseq.Editor.updateBlock(
+            uuid,
+            blk!.content.replace(`{{{${pBlkId}}}}`, content)
+          );
+
+          if (pBlk.children[i].children.length > 0) {
+            await recurse(pBlk.children[i].children, uuid);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      } else {
+        try {
+          const content = await processPowerBlock(
+            uuid,
+            pBlk.children[i].content,
+            input ?? ""
+          );
+          tempBlk = await logseq.Editor.insertBlock(tempBlk!.uuid, content, {
+            before: false,
+            sibling: true,
+          });
+
+          if (pBlk.children[i].children.length > 0) {
+            await recurse(pBlk.children[i].children, tempBlk!.uuid);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
   }
 }

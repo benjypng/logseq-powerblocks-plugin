@@ -110,18 +110,13 @@ async function main() {
 
   if (logseq.settings!.autoParse) {
     logseq.DB.onChanged(async function ({ blocks }) {
-      if (blocks.length === 2) {
-        if (
-          blocks[0].content &&
-          blocks[0].content.startsWith("{{{") &&
-          blocks[0].content.endsWith("}}}")
-        ) {
+      if (blocks.length === 2 && blocks[0].content) {
+        const regexp = /\{\{\{(.*?)\}\}\}/;
+        const matched = regexp.exec(blocks[0].content);
+        if (matched) {
           try {
-            const pBlkId = blocks[0].content
-              .replace("{{{", "")
-              .replace("}}}", "")
-              .trim();
-            await handlePowerBlocks("template", blocks[0].uuid, pBlkId);
+            const pBlkId = matched[1];
+            await handlePowerBlocks("autoParse", blocks[0].uuid, pBlkId);
           } catch (e) {
             console.log(e);
           }
