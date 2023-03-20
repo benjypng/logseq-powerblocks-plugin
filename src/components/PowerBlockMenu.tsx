@@ -13,13 +13,6 @@ export default function PowerBlockMenu(props: {
     zIndex: 99,
   };
 
-  useEffect(() => {
-    (
-      document.querySelector("#powerblocks-menu")
-        ?.firstElementChild as HTMLElement
-    ).focus();
-  }, []);
-
   async function insertPowerBlock(e: any) {
     logseq.hideMainUI();
 

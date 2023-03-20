@@ -33,12 +33,12 @@ export default function InputBox(props: {
   return (
     <div className="flex justify-center border border-black">
       <div
-        className="absolute top-20 bg-white rounded-lg p-3 w-2/3 border flex flex-col"
+        className="absolute top-20 bg-white rounded-lg p-3 w-1/3 border flex flex-col"
         id="powerblocks-menu"
       >
         {props.inputArr.map((i: string) => (
           <input
-            className="mb-3 py-1 px-2 text-sm border border-purple-600"
+            className="mb-3 py-2 px-2 border border-purple-600"
             type="text"
             placeholder={getPlaceholder(i)}
             name={i}

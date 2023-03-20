@@ -12,8 +12,6 @@ export default function checkIfCondition(matched: string, nlp?: boolean) {
   };
 
   if (!nlp) {
-    const checker = parseInt(matched.split(":")[1]);
-
     let comparator: number;
     switch (checkerObj[matched.split(":")[0]]) {
       case "day":
@@ -40,7 +38,16 @@ export default function checkIfCondition(matched: string, nlp?: boolean) {
         return false;
     }
 
-    return checker === comparator;
+    let state = false;
+    const checker = matched.split(":")[1].split(",");
+
+    for (const i of checker) {
+      if (comparator === parseInt(i)) {
+        state = true;
+      }
+    }
+
+    return state;
   } else {
     const dateToCheck = chrono.parseDate(matched.split(":")[1]);
     return getDateInYYYYMMDD(dateToCheck) === getDateInYYYYMMDD(new Date());

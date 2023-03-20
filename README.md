@@ -81,13 +81,13 @@ Below is the list of available syntaxes. I may consider adding to the list, but 
 Below is the list of syntaxes that rely on conditions specified. Blocks with the conditions will only appear if it matches the parameters.
 
 - `<%IFDAYOFWEEK:1"%>`
-  Block containing this syntax will only be added if the day of the week matches the day indicated. 0 is Sunday, 1 is Monday and so on.
+  Block containing this syntax will only be added if the day of the week matches the day indicated. 0 is Sunday, 1 is Monday and so on. If you would like the block to be added on multiple days, simply add the values separated by `,`, e.g. `<%IFDAYOFWEEK:1,2,4%>`.
 
 - `<%IFMONTHOFYEAR:2%>`
-  Block containing this syntax will only be added if the month of the year matches the month indicated. 0 is January, 1 is February and so on.
+  Block containing this syntax will only be added if the month of the year matches the month indicated. 0 is January, 1 is February and so on. If you would like the block to be added on multiple days, simply add the values separated by `,`, e.g. `<%IFMONTHOFYEAR:1,2,4%>`.
 
 - `<%IFYEAR:2023%>`
-  Block containing this syntax will only be added if the year matches the year indicated..
+  Block containing this syntax will only be added if the year matches the year indicated.. If you would like the block to be added on multiple days, simply add the values separated by `,`, e.g. `<%YEAR:2022,2023%>`.
 
 - `<%IFDATE:tomorrow%>`
   Block containing this syntax will only be added if the date mentioned in the block matches the current date.

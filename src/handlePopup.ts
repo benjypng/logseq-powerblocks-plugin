@@ -5,7 +5,13 @@ export default function handleClosePopup() {
     function (e) {
       if (e.key === "Escape") {
         logseq.hideMainUI({ restoreEditingCursor: true });
+      } else {
+        (
+          document.querySelector("#powerblocks-menu")
+            .firstElementChild as HTMLElement
+        ).focus();
       }
+
       e.stopPropagation();
     },
     false
