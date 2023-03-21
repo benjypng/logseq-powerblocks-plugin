@@ -63,6 +63,7 @@ export default async function processPowerBlock(
   if (content.includes("<%IFDAYOFWEEK:") && content.includes("%>")) {
     const regexp = /\<\%(.*?)\%\>/;
     const matched = regexp.exec(content);
+
     if (checkIfCondition(matched[1])) {
       content = content.replaceAll(matched![0], "");
     } else {
@@ -195,6 +196,17 @@ export default async function processPowerBlock(
       .map((i) => parseFloat(i))
       .reduce((a, b) => a + b);
     content = content.replaceAll(matched[0], varsArr.toString());
+  }
+
+  if (content.includes("<%SIDEBAROPEN:") && content.includes("%>")) {
+    const regexp = /\<\%SIDEBAROPEN:(.*?)\%\>/;
+    const matched = regexp.exec(content);
+
+    if (matched && matched[1]) {
+      logseq.Editor.openInRightSidebar(matched[1]);
+    }
+
+    content = "";
   }
 
   // Handle replacement of template strings
