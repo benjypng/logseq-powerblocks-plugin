@@ -21,14 +21,17 @@ export default async function handlePowerBlocks(
   async function recurse(arr: BlockEntity[], uuid: string) {
     for (const i of arr) {
       try {
-        const blk = await logseq.Editor.insertBlock(
-          uuid,
-          await processPowerBlock(uuid, i.content, input ?? ""),
-          { sibling: false }
-        );
+        const content = await processPowerBlock(uuid, i.content, input ?? "");
+        if (content.length !== 0) {
+          const blk = await logseq.Editor.insertBlock(
+            uuid,
+            await processPowerBlock(uuid, i.content, input ?? ""),
+            { sibling: false }
+          );
 
-        if (i.children!.length > 0) {
-          await recurse(i.children as BlockEntity[], blk!.uuid);
+          if (i.children!.length > 0) {
+            await recurse(i.children as BlockEntity[], blk!.uuid);
+          }
         }
       } catch (e) {
         console.log(e);
@@ -49,16 +52,18 @@ export default async function handlePowerBlocks(
             input ?? ""
           );
 
-          await logseq.Editor.updateBlock(
-            uuid,
-            blk!.content.replace(
-              `{{renderer :powerblocks_, ${pBlkId}}}`,
-              content
-            )
-          );
+          if (content.length !== 0) {
+            await logseq.Editor.updateBlock(
+              uuid,
+              blk!.content.replace(
+                `{{renderer :powerblocks_, ${pBlkId}}}`,
+                content
+              )
+            );
 
-          if (pBlk.children[i].children.length > 0) {
-            await recurse(pBlk.children[i].children, uuid);
+            if (pBlk.children[i].children.length > 0) {
+              await recurse(pBlk.children[i].children, uuid);
+            }
           }
         } catch (e) {
           console.log(e);
@@ -70,13 +75,16 @@ export default async function handlePowerBlocks(
             pBlk.children[i].content,
             input ?? ""
           );
-          tempBlk = await logseq.Editor.insertBlock(tempBlk!.uuid, content, {
-            before: false,
-            sibling: true,
-          });
 
-          if (pBlk.children[i].children.length > 0) {
-            await recurse(pBlk.children[i].children, tempBlk!.uuid);
+          if (content.length !== 0) {
+            tempBlk = await logseq.Editor.insertBlock(tempBlk!.uuid, content, {
+              before: false,
+              sibling: true,
+            });
+
+            if (pBlk.children[i].children.length > 0) {
+              await recurse(pBlk.children[i].children, tempBlk!.uuid);
+            }
           }
         } catch (e) {
           console.log(e);
@@ -88,12 +96,14 @@ export default async function handlePowerBlocks(
     for (let b of pBlk.children.reverse()) {
       try {
         const content = await processPowerBlock(uuid, b.content);
-        const blk = await logseq.Editor.insertBlock(uuid, content, {
-          sibling: true,
-        });
+        if (content.length !== 0) {
+          const blk = await logseq.Editor.insertBlock(uuid, content, {
+            sibling: true,
+          });
 
-        if (b.children.length > 0) {
-          await recurse(b.children, blk!.uuid);
+          if (b.children.length > 0) {
+            await recurse(b.children, blk!.uuid);
+          }
         }
       } catch (e) {
         console.log(e);
@@ -102,6 +112,7 @@ export default async function handlePowerBlocks(
 
     await logseq.Editor.removeBlock(uuid);
   } else if (type === "autoParse") {
+    // Process autoParse
     const blk = await logseq.Editor.getBlock(uuid);
 
     let tempBlk = blk;
@@ -114,13 +125,15 @@ export default async function handlePowerBlocks(
             input ?? ""
           );
 
-          await logseq.Editor.updateBlock(
-            uuid,
-            blk!.content.replace(`{{{${pBlkId}}}}`, content)
-          );
+          if (content.length !== 0) {
+            await logseq.Editor.updateBlock(
+              uuid,
+              blk!.content.replace(`{{{${pBlkId}}}}`, content)
+            );
 
-          if (pBlk.children[i].children.length > 0) {
-            await recurse(pBlk.children[i].children, uuid);
+            if (pBlk.children[i].children.length > 0) {
+              await recurse(pBlk.children[i].children, uuid);
+            }
           }
         } catch (e) {
           console.log(e);
@@ -132,13 +145,16 @@ export default async function handlePowerBlocks(
             pBlk.children[i].content,
             input ?? ""
           );
-          tempBlk = await logseq.Editor.insertBlock(tempBlk!.uuid, content, {
-            before: false,
-            sibling: true,
-          });
 
-          if (pBlk.children[i].children.length > 0) {
-            await recurse(pBlk.children[i].children, tempBlk!.uuid);
+          if (content.length !== 0) {
+            tempBlk = await logseq.Editor.insertBlock(tempBlk!.uuid, content, {
+              before: false,
+              sibling: true,
+            });
+
+            if (pBlk.children[i].children.length > 0) {
+              await recurse(pBlk.children[i].children, tempBlk!.uuid);
+            }
           }
         } catch (e) {
           console.log(e);
