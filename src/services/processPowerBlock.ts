@@ -169,20 +169,19 @@ export default async function processPowerBlock(
     content = content.replaceAll(
       matched![0],
       `
-												#+BEGIN_QUERY
-												{:title [:h2 "Random Quote 🎙"]
-												 :query [:find (pull ?b [*])
-												         :where
-												         [?p :block/name "${tag}"]
-												         (or [?b :block/refs ?p]
-												         [?b :block/page ?p])
-												    ]
-												 :result-transform (fn [result]
-												         [(rand-nth result)])
-												 :breadcrumb-show? false
-												}
-												#+END_QUERY
-			`
+#+BEGIN_QUERY
+	{:title [:h2 "Random Quote ??"]
+	 :query [:find (pull ?b [*])
+	 :where
+					[?p :block/name "quotes"]
+					(or [?b :block/refs ?p]
+					[?b :block/page ?p])
+					]
+	 :result-transform (fn [result]
+		                     [(rand-nth result)])
+	 :breadcrumb-show? false
+	}
+#+END_QUERY`
     );
   }
 
