@@ -40,7 +40,6 @@ async function main() {
   -webkit-user-select: none;
   touch-action: manipulation;
   vertical-align: middle;
-  width: 100px;
 }
 
 .powerblocks-btn:hover {
