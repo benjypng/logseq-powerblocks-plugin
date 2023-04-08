@@ -208,6 +208,24 @@ export default async function processPowerBlock(
     content = "";
   }
 
+  if (content.includes("<%GETPROPERTY:") && content.includes("%>")) {
+    const regexp = /\<\%GETPROPERTY:(.*?)\%\>/;
+    const matched = regexp.exec(content);
+
+    const [id, property] = matched[1].split(",");
+    let result: string;
+    if (id.startsWith("[[") && id.endsWith("]]")) {
+      const page = await logseq.Editor.getPage(
+        id.trim().replace("[[", "").replace("]]", "")
+      );
+      result = await logseq.Editor.getBlockProperty(page.uuid, property);
+    } else {
+      result = await logseq.Editor.getBlockProperty(id.trim(), property);
+    }
+
+    content = result;
+  }
+
   // Handle replacement of template strings
   const templateStrArr = [
     {
