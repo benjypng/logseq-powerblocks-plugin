@@ -79,6 +79,9 @@ Below is the list of available syntaxes. I may consider adding to the list, but 
 - `<%SIDEBAROPEN:uuid%>`
   If your template or button contains this syntax, the right sidebar will immediately open with the indicated block.
 
+- `<%GETPROPERTY:[[page]],property%>`
+  Gets the value of the stated property from the stated page.
+
 # Syntaxes (CONDITIONAL)
 
 Below is the list of syntaxes that rely on conditions specified. Blocks with the conditions will only appear if it matches the parameters.
