@@ -170,7 +170,7 @@ export default async function processPowerBlock(
       matched![0],
       `
 #+BEGIN_QUERY
-	{:title [:h2 "Random Quote ??"]
+	{:title [:h3 "Random Quote"]
 	 :query [:find (pull ?b [*])
 	 :where
 					[?p :block/name "quotes"]
