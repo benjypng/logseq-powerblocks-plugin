@@ -9,12 +9,12 @@ import getPageName from "./getPageName";
 export default async function processPowerBlock(
   uuid: string,
   content: string,
-  input?: any
+  input?: any,
 ) {
   if (input !== "") {
     if (content.includes("<%INPUT:") && content.includes("%>")) {
       Object.entries(input).map(
-        (i) => (content = content.replace(i[0], i[1].toString()))
+        (i) => (content = content.replace(i[0], i[1].toString())),
       );
     }
   }
@@ -131,7 +131,7 @@ export default async function processPowerBlock(
     const dateToParse = matched![1].replace("DATE:", "").trim();
 
     const page = await logseq.Editor.getPage(
-      (await logseq.Editor.getCurrentBlock())!.parent.id
+      (await logseq.Editor.getCurrentBlock())!.parent.id,
     );
 
     const referenceDate = !page!["journal?"]
@@ -144,8 +144,8 @@ export default async function processPowerBlock(
       matched![0],
       getDateForPage(
         date,
-        (await logseq.App.getUserConfigs()).preferredDateFormat
-      )
+        (await logseq.App.getUserConfigs()).preferredDateFormat,
+      ),
     );
   }
 
@@ -153,7 +153,7 @@ export default async function processPowerBlock(
     const regexp = /\<\%(.*?)\%\>/;
     const matched = regexp.exec(content);
     const startDate = chrono.parseDate(
-      matched![1].replace("WEEKSSINCEDATE", "").trim()
+      matched![1].replace("WEEKSSINCEDATE", "").trim(),
     );
 
     const difference = differenceInCalendarWeeks(new Date(), startDate);
@@ -162,27 +162,14 @@ export default async function processPowerBlock(
   }
 
   if (content.includes("<%RANDOMTAG:") && content.includes("%>")) {
-    const regexp = /\<\%(.*?)\%\>/;
+    const regexp = /<%(.*?)%>/;
     const matched = regexp.exec(content);
-
-    const tag = matched![1].replace("RANDOMTAG:", "");
-    content = content.replaceAll(
-      matched![0],
-      `
-#+BEGIN_QUERY
-	{:title [:h3 "Random Quote"]
-	 :query [:find (pull ?b [*])
-	 :where
-					[?p :block/name "quotes"]
-					(or [?b :block/refs ?p]
-					[?b :block/page ?p])
-					]
-	 :result-transform (fn [result]
-		                     [(rand-nth result)])
-	 :breadcrumb-show? false
-	}
-#+END_QUERY`
-    );
+    const tag = matched![1]!.replace("RANDOMTAG:", "");
+    const query = await logseq.DB.q(`(and [[${tag}]] (sample 1))`);
+    if (!query) return;
+    if (query.length === 0)
+      await logseq.UI.showMsg("No reference found", "error");
+    content = content.replaceAll(matched![0], `{{embed ((${query[0].uuid}))}}`);
   }
 
   if (content.includes("<%SUM:") && content.includes("%>")) {
@@ -216,7 +203,7 @@ export default async function processPowerBlock(
     let result: string;
     if (id.startsWith("[[") && id.endsWith("]]")) {
       const page = await logseq.Editor.getPage(
-        id.trim().replace("[[", "").replace("]]", "")
+        id.trim().replace("[[", "").replace("]]", ""),
       );
       result = await logseq.Editor.getBlockProperty(page.uuid, property);
     } else {
@@ -279,7 +266,7 @@ export default async function processPowerBlock(
     const pbToRender = matched![1].replace("PB:", "").trim();
     content = content.replaceAll(
       matched![0],
-      `{{renderer :powerblocks_, ${pbToRender}}}`
+      `{{renderer :powerblocks_, ${pbToRender}}}`,
     );
   }
 

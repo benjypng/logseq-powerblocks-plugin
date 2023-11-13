@@ -26,7 +26,6 @@ export default function InputBox(props: {
   function getPlaceholder(content: string) {
     const regexp = /\<\%INPUT\:(.*?)\%\>/;
     const matched = regexp.exec(content);
-
     return matched![1];
   }
 
@@ -36,19 +35,22 @@ export default function InputBox(props: {
         className="absolute top-20 bg-white rounded-lg p-3 w-1/3 border flex flex-col"
         id="powerblocks-menu"
       >
-        {props.inputArr.map((i: string) => (
-          <input
-            className="mb-3 py-2 px-2 border border-purple-600"
-            type="text"
-            placeholder={getPlaceholder(i)}
-            name={i}
-            onChange={handleChange}
-            value={inputValues[i]}
-          />
-        ))}
-        <button className="py-1 px-2" onClick={handleSubmit}>
-          Submit
-        </button>
+        <form onSubmit={handleSubmit(e)}>
+          {props.inputArr.map((i: string) => (
+            <input
+              className="mb-3 py-2 px-2 border border-purple-600"
+              autoFocus={true}
+              type="text"
+              placeholder={getPlaceholder(i)}
+              name={i}
+              onChange={handleChange}
+              value={inputValues[i]}
+            />
+          ))}
+          <button className="py-1 px-2" type="submit">
+            Submit
+          </button>
+        </form>
       </div>
     </div>
   );
