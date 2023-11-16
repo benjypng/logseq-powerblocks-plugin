@@ -1,5 +1,5 @@
 import { BlockEntity } from "@logseq/libs/dist/LSPlugin";
-import React, { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import handlePowerBlocks from "../services/handlePowerBlocks";
 
 export default function InputBox(props: {
@@ -10,11 +10,7 @@ export default function InputBox(props: {
 }) {
   const [inputValues, setInputValues] = useState({});
 
-  function handleChange(e) {
-    setInputValues({ ...inputValues, [e.target.name]: e.target.value });
-  }
-
-  async function handleSubmit(e) {
+  async function handleSubmit(e: ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
     logseq.hideMainUI();
     await handlePowerBlocks("button", props.uuid, props.pBlkId, inputValues);
@@ -24,7 +20,7 @@ export default function InputBox(props: {
   }
 
   function getPlaceholder(content: string) {
-    const regexp = /\<\%INPUT\:(.*?)\%\>/;
+    const regexp = /<%INPUT:(.*?)%>/;
     const matched = regexp.exec(content);
     return matched![1];
   }
@@ -35,7 +31,7 @@ export default function InputBox(props: {
         className="absolute top-20 bg-white rounded-lg p-3 w-1/3 border flex flex-col"
         id="powerblocks-menu"
       >
-        <form onSubmit={handleSubmit(e)}>
+        <form onSubmit={handleSubmit}>
           {props.inputArr.map((i: string) => (
             <input
               className="mb-3 py-2 px-2 border border-purple-600"
@@ -43,7 +39,13 @@ export default function InputBox(props: {
               type="text"
               placeholder={getPlaceholder(i)}
               name={i}
-              onChange={handleChange}
+              onChange={(e) =>
+                setInputValues((prevValue) => ({
+                  ...prevValue,
+                  [e.target.name]: e.target.value,
+                }))
+              }
+              // @ts-ignore
               value={inputValues[i]}
             />
           ))}

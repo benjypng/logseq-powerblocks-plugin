@@ -7,14 +7,14 @@ export default function handleClosePopup() {
         logseq.hideMainUI({ restoreEditingCursor: true });
       } else {
         (
-          document.querySelector("#powerblocks-menu")
+          document.querySelector("#powerblocks-menu")!
             .firstElementChild as HTMLElement
         ).focus();
       }
 
       e.stopPropagation();
     },
-    false
+    false,
   );
 
   // Click

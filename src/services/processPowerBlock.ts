@@ -1,17 +1,23 @@
 import getTime from "../utils/getTime";
 import getDateFromJournalDay from "../utils/getDateFromJournalDay";
 import { getDateForPage, getDayInText } from "logseq-dateutils";
-import checkIfCondition from "./checkIfCondition";
 import * as chrono from "chrono-node";
 import { differenceInCalendarWeeks, getWeek, getWeekOfMonth } from "date-fns";
 import getPageName from "./getPageName";
+import { handleAndOr } from "~/libs/handleAnd";
+import { handleIfDayOfWeek } from "~/libs/handleIfDayOfWeek";
+import { handleIfDate } from "~/libs/handleIfDate";
+import { handleIfYear } from "~/libs/handleIfYear";
+import { handleIfWeekOfMonth } from "~/libs/handleIfWeekOfMonth";
+import { handleIfWeekOfYear } from "~/libs/handleIfWeekOfYear";
+import { checkDate } from "~/libs/checkDate";
 
 export default async function processPowerBlock(
   uuid: string,
   content: string,
-  input?: any,
+  input?: string,
 ) {
-  if (input !== "") {
+  if (input && input !== "") {
     if (content.includes("<%INPUT:") && content.includes("%>")) {
       Object.entries(input).map(
         (i) => (content = content.replace(i[0], i[1].toString())),
@@ -19,135 +25,21 @@ export default async function processPowerBlock(
     }
   }
 
-  if (content.includes("<%AND") && content.includes("%>")) {
-    const regexp = /\<\%AND(.*)\%\>/;
-    const matched = regexp.exec(content);
-    const checkerArr = matched[1]
-      .split("%>")
-      .map((i) => i.replace("<%", "").trim())
-      .filter((i) => i.length > 0);
+  // TODO: Convert to function so that the same content can be parsed through all the various methods.
+  // This can also be used in the kanban and tablerender plugins?
+  content = handleAndOr(content);
 
-    let state: boolean = true;
-    for (const i of checkerArr) {
-      state = checkIfCondition(i);
-      if (state === false) break;
-    }
+  content = handleIfDayOfWeek(content);
 
-    if (state) {
-      content = content.replace(matched![0], "");
-      return content;
-    } else {
-      return "";
-    }
-  } else if (content.includes("<%OR") && content.includes("%>")) {
-    const regexp = /\<\%OR(.*)\%\>/;
-    const matched = regexp.exec(content);
-    const checkerArr = matched[1]
-      .split("%>")
-      .map((i) => i.replace("<%", "").trim())
-      .filter((i) => i.length > 0);
+  content = handleIfDate(content);
 
-    let state: boolean = false;
-    for (const i of checkerArr) {
-      state = checkIfCondition(i);
-      if (state === true) break;
-    }
-    if (state) {
-      content = content.replace(matched![0], "");
-      return content;
-    } else {
-      return "";
-    }
-  }
+  content = handleIfYear(content);
 
-  if (content.includes("<%IFDAYOFWEEK:") && content.includes("%>")) {
-    const regexp = /\<\%(.*?)\%\>/;
-    const matched = regexp.exec(content);
+  content = handleIfWeekOfMonth(content);
 
-    if (checkIfCondition(matched[1])) {
-      content = content.replaceAll(matched![0], "");
-    } else {
-      return "";
-    }
-  }
+  content = handleIfWeekOfYear(content);
 
-  if (content.includes("<%IFMONTHOFYEAR:") && content.includes("%>")) {
-    const regexp = /\<\%(.*?)\%\>/;
-    const matched = regexp.exec(content);
-    if (checkIfCondition(matched[1])) {
-      content = content.replaceAll(matched![0], "");
-    } else {
-      return "";
-    }
-  }
-
-  if (content.includes("<%IFDATE:") && content.includes("%>")) {
-    const regexp = /\<\%(.*?)\%\>/;
-    const matched = regexp.exec(content);
-
-    if (checkIfCondition(matched[1], true)) {
-      content = content.replaceAll(matched![0], "");
-    } else {
-      return "";
-    }
-  }
-
-  if (content.includes("<%IFYEAR:") && content.includes("%>")) {
-    const regexp = /\<\%(.*?)\%\>/;
-    const matched = regexp.exec(content);
-
-    if (checkIfCondition(matched[1])) {
-      content = content.replaceAll(matched![0], "");
-    } else {
-      return "";
-    }
-  }
-
-  if (content.includes("<%IFWEEKOFMONTH:") && content.includes("%>")) {
-    const regexp = /\<\%(.*?)\%\>/;
-    const matched = regexp.exec(content);
-
-    if (checkIfCondition(matched[1])) {
-      content = content.replaceAll(matched![0], "");
-    } else {
-      return "";
-    }
-  }
-
-  if (content.includes("<%IFWEEKOFYEAR:") && content.includes("%>")) {
-    const regexp = /\<\%(.*?)\%\>/;
-    const matched = regexp.exec(content);
-
-    if (checkIfCondition(matched[1])) {
-      content = content.replaceAll(matched![0], "");
-    } else {
-      return "";
-    }
-  }
-
-  if (content.includes("<%DATE:") && content.includes("%>")) {
-    const regexp = /\<\%(.*?)\%\>/;
-    const matched = regexp.exec(content);
-    const dateToParse = matched![1].replace("DATE:", "").trim();
-
-    const page = await logseq.Editor.getPage(
-      (await logseq.Editor.getCurrentBlock())!.parent.id,
-    );
-
-    const referenceDate = !page!["journal?"]
-      ? new Date()
-      : new Date(getDateFromJournalDay(page!.journalDay!));
-
-    const date = chrono.parseDate(dateToParse, referenceDate);
-
-    content = content.replaceAll(
-      matched![0],
-      getDateForPage(
-        date,
-        (await logseq.App.getUserConfigs()).preferredDateFormat,
-      ),
-    );
-  }
+  content = await checkDate(content);
 
   if (content.includes("<%WEEKSSINCEDATE:") && content.includes("%>")) {
     const regexp = /\<\%(.*?)\%\>/;
@@ -164,12 +56,17 @@ export default async function processPowerBlock(
   if (content.includes("<%RANDOMTAG:") && content.includes("%>")) {
     const regexp = /<%(.*?)%>/;
     const matched = regexp.exec(content);
-    const tag = matched![1]!.replace("RANDOMTAG:", "");
-    const query = await logseq.DB.q(`(and [[${tag}]] (sample 1))`);
+    const tags = matched![1]
+      ?.replace("RANDOMTAG:", "")
+      .split(",")
+      .map((i) => `[[${i.trim()}]]`)
+      .join(" ");
+    const query = await logseq.DB.q(`(or ${tags} (sample 1))`);
     if (!query) return;
     if (query.length === 0)
       await logseq.UI.showMsg("No reference found", "error");
-    content = content.replaceAll(matched![0], `{{embed ((${query[0].uuid}))}}`);
+    content = content.replaceAll(matched![0], `((${query[0].uuid}))`);
+    await logseq.Editor.upsertBlockProperty(query[0].uuid, "id", query[0].uuid);
   }
 
   if (content.includes("<%SUM:") && content.includes("%>")) {

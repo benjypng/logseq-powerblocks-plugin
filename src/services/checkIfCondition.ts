@@ -13,7 +13,8 @@ export default function checkIfCondition(matched: string, nlp?: boolean) {
 
   if (!nlp) {
     let comparator: number;
-    switch (checkerObj[matched.split(":")[0]]) {
+    // @ts-ignore
+    switch (checkerObj[matched.split(":")[0]!]) {
       case "day":
         comparator = new Date().getDay();
         break;
@@ -39,7 +40,7 @@ export default function checkIfCondition(matched: string, nlp?: boolean) {
     }
 
     let state = false;
-    const checker = matched.split(":")[1].split(",");
+    const checker = matched.split(":")[1]!.split(",");
 
     for (const i of checker) {
       if (comparator === parseInt(i)) {
@@ -49,7 +50,7 @@ export default function checkIfCondition(matched: string, nlp?: boolean) {
 
     return state;
   } else {
-    const dateToCheck = chrono.parseDate(matched.split(":")[1]);
+    const dateToCheck = chrono.parseDate(matched.split(":")[1]!);
     return getDateInYYYYMMDD(dateToCheck) === getDateInYYYYMMDD(new Date());
   }
 }

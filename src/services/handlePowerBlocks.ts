@@ -6,7 +6,7 @@ export default async function handlePowerBlocks(
   type: string,
   uuid: string,
   pBlkId: string,
-  input?: any
+  input?: string | undefined,
 ) {
   // All powerblocks templates and buttons are handled using this function.
   // For buttons, the first block should replace {{renderer}}
@@ -22,11 +22,11 @@ export default async function handlePowerBlocks(
     for (const i of arr) {
       try {
         const content = await processPowerBlock(uuid, i.content, input ?? "");
-        if (content.length !== 0) {
+        if (content?.length !== 0) {
           const blk = await logseq.Editor.insertBlock(
             uuid,
             await processPowerBlock(uuid, i.content, input ?? ""),
-            { sibling: false }
+            { sibling: false },
           );
 
           if (i.children!.length > 0) {
@@ -49,7 +49,7 @@ export default async function handlePowerBlocks(
           const content = await processPowerBlock(
             uuid,
             pBlk.children[i].content,
-            input ?? ""
+            input ?? "",
           );
 
           if (content.length !== 0) {
@@ -57,8 +57,8 @@ export default async function handlePowerBlocks(
               uuid,
               blk!.content.replace(
                 `{{renderer :powerblocks_, ${pBlkId}}}`,
-                content
-              )
+                content,
+              ),
             );
 
             if (pBlk.children[i].children.length > 0) {
@@ -73,7 +73,7 @@ export default async function handlePowerBlocks(
           const content = await processPowerBlock(
             uuid,
             pBlk.children[i].content,
-            input ?? ""
+            input ?? "",
           );
 
           if (content.length !== 0) {
@@ -122,13 +122,13 @@ export default async function handlePowerBlocks(
           const content = await processPowerBlock(
             uuid,
             pBlk.children[i].content,
-            input ?? ""
+            input ?? "",
           );
 
-          if (content.length !== 0) {
+          if (content?.length !== 0) {
             await logseq.Editor.updateBlock(
               uuid,
-              blk!.content.replace(`{{{${pBlkId}}}}`, content)
+              blk!.content.replace(`{{{${pBlkId}}}}`, content!),
             );
 
             if (pBlk.children[i].children.length > 0) {
@@ -143,11 +143,11 @@ export default async function handlePowerBlocks(
           const content = await processPowerBlock(
             uuid,
             pBlk.children[i].content,
-            input ?? ""
+            input ?? "",
           );
 
-          if (content.length !== 0) {
-            tempBlk = await logseq.Editor.insertBlock(tempBlk!.uuid, content, {
+          if (content?.length !== 0) {
+            tempBlk = await logseq.Editor.insertBlock(tempBlk!.uuid, content!, {
               before: false,
               sibling: true,
             });
