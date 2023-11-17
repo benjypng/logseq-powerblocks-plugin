@@ -1,8 +1,6 @@
 import getTime from "../utils/getTime";
-import getDateFromJournalDay from "../utils/getDateFromJournalDay";
-import { getDateForPage, getDayInText } from "logseq-dateutils";
-import * as chrono from "chrono-node";
-import { differenceInCalendarWeeks, getWeek, getWeekOfMonth } from "date-fns";
+import { getDayInText } from "logseq-dateutils";
+import { getWeek, getWeekOfMonth } from "date-fns";
 import getPageName from "./getPageName";
 import { handleAndOr } from "~/libs/handleAnd";
 import { handleIfDayOfWeek } from "~/libs/handleIfDayOfWeek";
@@ -11,6 +9,12 @@ import { handleIfYear } from "~/libs/handleIfYear";
 import { handleIfWeekOfMonth } from "~/libs/handleIfWeekOfMonth";
 import { handleIfWeekOfYear } from "~/libs/handleIfWeekOfYear";
 import { checkDate } from "~/libs/checkDate";
+import { checkWeeksSinceDate } from "~/libs/checkWeeksSinceDate";
+import { handleRandomTag } from "~/libs/handleRandomTag";
+import { checkSum } from "~/libs/checkSum";
+import { sidebarOpen } from "~/libs/sidebarOpen";
+import { getProperty } from "~/libs/getProperty";
+import { handleInlinePowerblocks } from "~/libs/handleInlinePowerblocks";
 
 export default async function processPowerBlock(
   uuid: string,
@@ -41,74 +45,15 @@ export default async function processPowerBlock(
 
   content = await checkDate(content);
 
-  if (content.includes("<%WEEKSSINCEDATE:") && content.includes("%>")) {
-    const regexp = /\<\%(.*?)\%\>/;
-    const matched = regexp.exec(content);
-    const startDate = chrono.parseDate(
-      matched![1].replace("WEEKSSINCEDATE", "").trim(),
-    );
+  content = checkWeeksSinceDate(content);
 
-    const difference = differenceInCalendarWeeks(new Date(), startDate);
+  content = await handleRandomTag(content);
 
-    content = content.replaceAll(matched![0], difference.toString());
-  }
+  content = checkSum(content);
 
-  if (content.includes("<%RANDOMTAG:") && content.includes("%>")) {
-    const regexp = /<%(.*?)%>/;
-    const matched = regexp.exec(content);
-    const tags = matched![1]
-      ?.replace("RANDOMTAG:", "")
-      .split(",")
-      .map((i) => `[[${i.trim()}]]`)
-      .join(" ");
-    const query = await logseq.DB.q(`(or ${tags} (sample 1))`);
-    if (!query) return;
-    if (query.length === 0)
-      await logseq.UI.showMsg("No reference found", "error");
-    content = content.replaceAll(matched![0], `((${query[0].uuid}))`);
-    await logseq.Editor.upsertBlockProperty(query[0].uuid, "id", query[0].uuid);
-  }
+  content = sidebarOpen(content);
 
-  if (content.includes("<%SUM:") && content.includes("%>")) {
-    const regexp = /\<\%(.*?)\%\>/;
-    const matched = regexp.exec(content);
-
-    const varsArr = matched![1]
-      .replace("SUM:", "")
-      .split(",")
-      .map((i) => parseFloat(i))
-      .reduce((a, b) => a + b);
-    content = content.replaceAll(matched[0], varsArr.toString());
-  }
-
-  if (content.includes("<%SIDEBAROPEN:") && content.includes("%>")) {
-    const regexp = /\<\%SIDEBAROPEN:(.*?)\%\>/;
-    const matched = regexp.exec(content);
-
-    if (matched && matched[1]) {
-      logseq.Editor.openInRightSidebar(matched[1]);
-    }
-
-    content = "";
-  }
-
-  if (content.includes("<%GETPROPERTY:") && content.includes("%>")) {
-    const regexp = /\<\%GETPROPERTY:(.*?)\%\>/;
-    const matched = regexp.exec(content);
-
-    const [id, property] = matched[1].split(",");
-    let result: string;
-    if (id.startsWith("[[") && id.endsWith("]]")) {
-      const page = await logseq.Editor.getPage(
-        id.trim().replace("[[", "").replace("]]", ""),
-      );
-      result = await logseq.Editor.getBlockProperty(page.uuid, property);
-    } else {
-      result = await logseq.Editor.getBlockProperty(id.trim(), property);
-    }
-
-    content = result;
-  }
+  content = await getProperty(content);
 
   // Handle replacement of template strings
   const templateStrArr = [
@@ -153,19 +98,7 @@ export default async function processPowerBlock(
     content = content.replaceAll(t.tKey, t.tValue as string);
   }
 
-  // Handle inline power blocks
-  if (content.includes("<%PB:") && content.includes("%>")) {
-    // Get power block ID
-    const regexp = /\<\%(.*?)\%\>/;
-    const matched = regexp.exec(content);
-
-    // Parse matched[1]
-    const pbToRender = matched![1].replace("PB:", "").trim();
-    content = content.replaceAll(
-      matched![0],
-      `{{renderer :powerblocks_, ${pbToRender}}}`,
-    );
-  }
+  content = handleInlinePowerblocks(content);
 
   return content;
 }
