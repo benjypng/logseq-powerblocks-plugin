@@ -1,0 +1,59 @@
+#powerblocks-menu {
+  position: relative;
+  width: 500px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: sans-serif;
+}
+
+.powerblocks-search-input {
+  width: 90%;
+  max-width: 500px;
+  padding: 12px 16px;
+  font-size: 16px;
+  border: none;
+  border-bottom: 1px solid #e0e0e0;
+  outline: none;
+}
+
+.powerblocks-section {
+  padding: 8px 0;
+}
+
+.powerblocks-count {
+  font-weight: bold;
+}
+
+.powerblocks-menu-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.powerblocks-menu-item.selected {
+  background-color: #f0f0f0;
+}
+
+.powerblocks-menu-item:hover {
+  background-color: #f0f0f0;
+}
+
+.powerblocks-icon {
+  margin-right: 12px;
+  font-size: 18px;
+  width: 20px;
+  text-align: center;
+}
+
+.powerblocks-content {
+  flex-grow: 1;
+}
+
+.powerblocks-tip {
+  padding: 8px 16px;
+  font-size: 12px;
+  color: #666;
+  border-top: 1px solid #e0e0e0;
+}

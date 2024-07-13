@@ -1,5 +1,6 @@
 import * as chrono from "chrono-node";
 import { getDateForPage } from "logseq-dateutils";
+
 import getDateFromJournalDay from "../utils/getDateFromJournalDay";
 
 export const checkDate = async (content: string): Promise<string> => {

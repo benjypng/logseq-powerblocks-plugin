@@ -11,7 +11,7 @@ export const handleAndOr = (content: string): string => {
       .map((i) => i.replace("<%", "").trim())
       .filter((i) => i.length > 0);
 
-    let state: boolean = true;
+    let state = true;
     for (const i of checkerArr) {
       state = checkIfCondition(i);
       if (state === false) break;
@@ -32,7 +32,7 @@ export const handleAndOr = (content: string): string => {
       .map((i) => i.replace("<%", "").trim())
       .filter((i) => i.length > 0);
 
-    let state: boolean = false;
+    let state = false;
     for (const i of checkerArr) {
       state = checkIfCondition(i);
       if (state === true) break;

@@ -1,5 +1,6 @@
 import { BlockEntity } from "@logseq/libs/dist/LSPlugin";
 import { ChangeEvent, useState } from "react";
+
 import handlePowerBlocks from "../services/handlePowerBlocks";
 
 export default function InputBox(props: {

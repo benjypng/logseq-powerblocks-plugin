@@ -1,7 +1,7 @@
 {
   "name": "logseq-powerblocks-plugin",
   "author": "hkgnp",
-  "description": "Create power templates",
+  "description": "Create power templates.",
   "license": "MIT",
   "logseq": {
     "id": "logseq-powerblocks-plugin",
@@ -10,8 +10,6 @@
     "main": "dist/index.html"
   },
   "scripts": {
-    "dev:start": "pnpm add @logseq/libs -S && pnpm add @types/eslint @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint eslint-config-prettier eslint-plugin-prettier prettier vite vite-plugin-logseq vite-tsconfig-paths typescript -D",
-    "dev:tailwind": "pnpm add tailwindcss cssnano autoprefixer -D && touch tailwind.config.js && touch .postcssrc.cjs && touch src/tailwind.css",
     "dev": "npx vite",
     "build": "npx tsc && npx vite build",
     "preview": "npx vite preview"
@@ -32,33 +30,32 @@
     ]
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.8.2",
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
-    "@logseq/libs": "^0.0.15",
-    "chrono-node": "^2.5.0",
-    "date-fns": "^2.29.3",
-    "framer-motion": "^10.16.4",
-    "logseq-dateutils": "^0.0.26",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "tailwindcss": "^3.2.4"
+    "@logseq/libs": "^0.0.17",
+    "chrono-node": "^2.7.6",
+    "date-fns": "^3.6.0",
+    "logseq-dateutils": "^2.1.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@types/eslint": "^8.44.3",
-    "@types/node": "^20.7.0",
-    "@types/react": "^18.2.22",
-    "@types/react-dom": "^18.2.7",
-    "@typescript-eslint/eslint-plugin": "^6.7.3",
-    "@typescript-eslint/parser": "^6.7.3",
-    "cssnano": "^6.0.1",
-    "eslint": "^8.50.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.0",
-    "prettier": "^3.0.3",
-    "typescript": "^5.2.2",
-    "vite": "^4.4.9",
+    "@eslint/js": "^9.7.0",
+    "@types/eslint": "^8.56.10",
+    "@types/eslint-config-prettier": "^6.11.3",
+    "@types/eslint__js": "^8.42.3",
+    "@types/node": "^20.14.10",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^7.16.0",
+    "@typescript-eslint/parser": "^7.16.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "prettier": "^3.3.3",
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^7.16.0",
+    "vite": "^5.3.3",
     "vite-plugin-logseq": "^1.1.2",
-    "vite-tsconfig-paths": "^4.2.1"
+    "vite-tsconfig-paths": "^4.3.2"
   }
 }

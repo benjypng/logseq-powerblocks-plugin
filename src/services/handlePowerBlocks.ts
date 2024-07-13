@@ -1,12 +1,13 @@
-import getPowerBlocks from "./getPowerBlocks";
 import { BlockEntity } from "@logseq/libs/dist/LSPlugin.user";
+
+import getPowerBlocks from "./getPowerBlocks";
 import processPowerBlock from "./processPowerBlock";
 
 export default async function handlePowerBlocks(
   type: string,
   uuid: string,
   pBlkId: string,
-  input?: { [key: string]: string },
+  input?: Record<string, string>,
 ) {
   // All powerblocks templates and buttons are handled using this function.
   // For buttons, the first block should replace {{renderer}}

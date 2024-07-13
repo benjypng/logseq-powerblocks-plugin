@@ -1,5 +1,6 @@
 import * as chrono from "chrono-node";
 import { getWeek, getWeekOfMonth } from "date-fns";
+
 import getDateInYYYYMMDD from "../utils/getDateInYYYYMMDD";
 
 export default function checkIfCondition(matched: string, nlp?: boolean) {
