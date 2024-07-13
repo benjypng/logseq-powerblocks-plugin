@@ -1,4 +1,4 @@
-import checkIfCondition from "~/services/checkIfCondition";
+import checkIfCondition from "../services/checkIfCondition";
 
 export const handleIfDate = (content: string): string => {
   if (content.includes("<%IFDATE:") && content.includes("%>")) {

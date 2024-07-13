@@ -1,4 +1,4 @@
-import checkIfCondition from "~/services/checkIfCondition";
+import checkIfCondition from "../services/checkIfCondition";
 
 export const handleIfDayOfWeek = (content: string): string => {
   if (content.includes("<%IFDAYOFWEEK:") && content.includes("%>")) {

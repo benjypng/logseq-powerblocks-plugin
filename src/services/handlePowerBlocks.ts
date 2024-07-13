@@ -6,7 +6,7 @@ export default async function handlePowerBlocks(
   type: string,
   uuid: string,
   pBlkId: string,
-  input?: string | undefined,
+  input?: { [key: string]: string },
 ) {
   // All powerblocks templates and buttons are handled using this function.
   // For buttons, the first block should replace {{renderer}}
@@ -18,14 +18,14 @@ export default async function handlePowerBlocks(
   const { pBlk } = await getPowerBlocks(pBlkId);
 
   // Recursive function to handle children blocks
-  async function recurse(arr: BlockEntity[], uuid: string) {
+  const recurse = async (arr: BlockEntity[], uuid: string) => {
     for (const i of arr) {
       try {
-        const content = await processPowerBlock(uuid, i.content, input ?? "");
+        const content = await processPowerBlock(uuid, i.content, input || "");
         if (content?.length !== 0) {
           const blk = await logseq.Editor.insertBlock(
             uuid,
-            await processPowerBlock(uuid, i.content, input ?? ""),
+            await processPowerBlock(uuid, i.content, input || ""),
             { sibling: false },
           );
 
@@ -37,7 +37,7 @@ export default async function handlePowerBlocks(
         console.log(e);
       }
     }
-  }
+  };
 
   if (type === "button") {
     const blk = await logseq.Editor.getBlock(uuid);
@@ -93,7 +93,7 @@ export default async function handlePowerBlocks(
     }
   } else if (type === "template") {
     // Process template
-    for (let b of pBlk.children.reverse()) {
+    for (const b of pBlk.children.reverse()) {
       try {
         const content = await processPowerBlock(uuid, b.content);
         if (content.length !== 0) {

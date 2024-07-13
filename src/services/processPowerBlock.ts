@@ -2,19 +2,19 @@ import getTime from "../utils/getTime";
 import { getDayInText } from "logseq-dateutils";
 import { getWeek, getWeekOfMonth } from "date-fns";
 import getPageName from "./getPageName";
-import { handleAndOr } from "~/libs/handleAnd";
-import { handleIfDayOfWeek } from "~/libs/handleIfDayOfWeek";
-import { handleIfDate } from "~/libs/handleIfDate";
-import { handleIfYear } from "~/libs/handleIfYear";
-import { handleIfWeekOfMonth } from "~/libs/handleIfWeekOfMonth";
-import { handleIfWeekOfYear } from "~/libs/handleIfWeekOfYear";
-import { checkDate } from "~/libs/checkDate";
-import { checkWeeksSinceDate } from "~/libs/checkWeeksSinceDate";
-import { handleRandomTag } from "~/libs/handleRandomTag";
-import { checkSum } from "~/libs/checkSum";
-import { sidebarOpen } from "~/libs/sidebarOpen";
-import { getProperty } from "~/libs/getProperty";
-import { handleInlinePowerblocks } from "~/libs/handleInlinePowerblocks";
+import { handleAndOr } from "../libs/handleAndOr";
+import { handleIfDayOfWeek } from "../libs/handleIfDayOfWeek";
+import { handleIfDate } from "../libs/handleIfDate";
+import { handleIfYear } from "../libs/handleIfYear";
+import { handleIfWeekOfMonth } from "../libs/handleIfWeekOfMonth";
+import { handleIfWeekOfYear } from "../libs/handleIfWeekOfYear";
+import { checkDate } from "../libs/checkDate";
+import { checkWeeksSinceDate } from "../libs/checkWeeksSinceDate";
+import { handleRandomTag } from "../libs/handleRandomTag";
+import { checkSum } from "../libs/checkSum";
+import { sidebarOpen } from "../libs/sidebarOpen";
+import { getProperty } from "../libs/getProperty";
+import { handleInlinePowerblocks } from "../libs/handleInlinePowerblocks";
 
 export default async function processPowerBlock(
   uuid: string,
