@@ -1,25 +1,34 @@
-export const handleClosePopup = () => {
+export const handlePopup = () => {
   //ESC
   document.addEventListener(
     'keydown',
-    function (e) {
+    (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         logseq.hideMainUI({ restoreEditingCursor: true })
       } else {
-        ;(
-          document.querySelector('#powerblocks-menu')!
-            .firstElementChild as HTMLElement
-        ).focus()
+        const menuElement = document.querySelector('#powerblocks-menu')
+        if (menuElement) {
+          ;(menuElement.firstElementChild as HTMLElement)?.focus()
+        }
+
+        const inputContainer = document.querySelector('#powerblocks-input')
+        if (inputContainer) {
+          const firstInput = inputContainer.querySelector(
+            'input',
+          ) as HTMLInputElement
+          if (firstInput) {
+            firstInput.focus()
+          }
+        }
       }
       e.stopPropagation()
     },
     false,
   )
-
-  // Click
   document.addEventListener('click', (e) => {
     if (!(e.target as HTMLElement).closest('body')) {
       logseq.hideMainUI({ restoreEditingCursor: true })
     }
+    e.stopPropagation()
   })
 }

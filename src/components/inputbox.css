@@ -1,0 +1,41 @@
+  #powerblocks-input {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    max-width: 400px;
+    width: 90%;
+  }
+
+  #powerblocks-input form {
+    display: flex;
+    width: 100%;
+  }
+
+  #powerblocks-input input {
+    flex-grow: 1;
+    padding: 8px 12px;
+    border: 1px solid #a0aec0;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #4a5568;
+    background-color: #f7fafc;
+  }
+
+  #powerblocks-input button {
+    margin-left: 10px;
+    background-color: #718096;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+  }
+
+  #powerblocks-input button:hover {
+    background-color: #4a5568;
+  }
