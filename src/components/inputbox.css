@@ -42,6 +42,7 @@ body {
   font-weight: bold;
 }
 
+
 #powerblocks-input button {
   background-color: #718096;
   color: white;
@@ -55,4 +56,19 @@ body {
 
 #powerblocks-input button:hover {
   background-color: #4a5568;
+}
+
+#powerblocks-input button[type="reset"] {
+  background-color: white;
+  border: 1px solid gray;
+  color: black;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#powerblocks-input button[type="reset"]:hover {
+  background-color: gray;
+  color: white;
 }
