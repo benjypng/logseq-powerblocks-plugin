@@ -1,26 +1,27 @@
-import * as chrono from "chrono-node";
-import { getDateForPage } from "logseq-dateutils";
+import * as chrono from 'chrono-node'
+import { getDateForPage } from 'logseq-dateutils'
 
-import getDateFromJournalDay from "../utils/getDateFromJournalDay";
+import getDateFromJournalDay from '../utils/getDateFromJournalDay'
 
 export const checkDate = async (content: string): Promise<string> => {
-  if (content.includes("<%DATE:") && content.includes("%>")) {
-    const regexp = /<%(.*?)%>/;
-    const matched = regexp.exec(content);
-    if (!matched || !matched[1]) return content;
+  if (content.includes('<%DATE:') && content.includes('%>')) {
+    const regexp = /<%(.*?)%>/
+    const matched = regexp.exec(content)
+    if (!matched || !matched[1]) return content
 
-    const dateToParse = matched[1].replace("DATE:", "").trim();
+    const dateToParse = matched[1].replace('DATE:', '').trim()
 
     const page = await logseq.Editor.getPage(
       (await logseq.Editor.getCurrentBlock())!.parent.id,
-    );
-    if (!page) return content;
+    )
+    if (!page) return content
 
-    const referenceDate = !page["journal?"]
+    const referenceDate = !page['journal?']
       ? new Date()
-      : new Date(getDateFromJournalDay(page.journalDay!));
+      : new Date(getDateFromJournalDay(page.journalDay!))
 
-    const date = chrono.parseDate(dateToParse, referenceDate);
+    const date = chrono.parseDate(dateToParse, referenceDate)
+    if (!date) return ''
 
     return content.replaceAll(
       matched![0],
@@ -28,8 +29,8 @@ export const checkDate = async (content: string): Promise<string> => {
         date,
         (await logseq.App.getUserConfigs()).preferredDateFormat,
       ),
-    );
+    )
   } else {
-    return content;
+    return content
   }
-};
+}

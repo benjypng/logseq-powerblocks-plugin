@@ -14,8 +14,9 @@ import { handleInlinePowerblocks } from '../libs/handleInlinePowerblocks'
 import { handleRandomTag } from '../libs/handleRandomTag'
 import { sidebarOpen } from '../libs/sidebarOpen'
 import getTime from '../utils/getTime'
-import getPageName from './getPageName'
 import { getGraphUrl } from './getGraphUrl'
+import getPageName from './getPageName'
+import { getRandomPage } from './getRandomPage'
 
 export default async function processPowerBlock(
   uuid: string,
@@ -30,7 +31,7 @@ export default async function processPowerBlock(
     }
   }
 
-  // TODO: Convert to function so that the same content can be parsed through all the various methods.
+  // Handle templates with params
   content = handleAndOr(content)
 
   content = handleIfDayOfWeek(content)
@@ -55,7 +56,7 @@ export default async function processPowerBlock(
 
   content = await getProperty(content)
 
-  // Handle replacement of template strings
+  // Handle templates without params
   const templateStrArr = [
     {
       tKey: '<%TIME%>',
@@ -90,6 +91,11 @@ export default async function processPowerBlock(
     {
       tKey: '<%CURRENTPAGEURL%>',
       tValue: `${await getGraphUrl()}?page=${encodeURIComponent(await getPageName(uuid))}`,
+      type: 'replace',
+    },
+    {
+      tKey: `<%RANDOMPAGE%>`,
+      tValue: await getRandomPage(),
       type: 'replace',
     },
   ]
