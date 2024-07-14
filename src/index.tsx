@@ -58,16 +58,18 @@ const main = async () => {
         [`pb-${slot}`]: async function () {
           const { pBlk } = await getPowerBlocks(pBlkId)
           // Recursively go through all child blocks of the power block and locate an input block. If there is an input block, popup an Input and pass the content below
-          const inputArr: string[] = []
-          const findInput = (arr: BlockEntity[]) => {
-            for (const i of arr) {
-              if (i.content.includes('<%INPUT:') && i.content.includes('%>')) {
-                const regexp = /<%INPUT:(.*?)%>/
-                const matched = regexp.exec(i.content)
-                inputArr.push(matched![0])
+          const inputArr: { key: string; placeholder: string }[] = []
+          const findInput = (blocks: BlockEntity[]) => {
+            for (const block of blocks) {
+              const inputBlock = /<%INPUT:(.+?)%>/.exec(block.content)
+              if (inputBlock) {
+                inputArr.push({
+                  key: block.content,
+                  placeholder: inputBlock[1]!,
+                })
               }
-              if (i.children!.length > 0) {
-                findInput(i.children as BlockEntity[])
+              if (block.children) {
+                findInput(block.children as BlockEntity[])
               }
             }
           }

@@ -10,16 +10,6 @@ export const handlePopup = () => {
         if (menuElement) {
           ;(menuElement.firstElementChild as HTMLElement)?.focus()
         }
-
-        const inputContainer = document.querySelector('#powerblocks-input')
-        if (inputContainer) {
-          const firstInput = inputContainer.querySelector(
-            'input',
-          ) as HTMLInputElement
-          if (firstInput) {
-            firstInput.focus()
-          }
-        }
       }
       e.stopPropagation()
     },

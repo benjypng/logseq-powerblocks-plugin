@@ -1,70 +1,37 @@
 import './inputbox.css'
 
 import { BlockEntity } from '@logseq/libs/dist/LSPlugin'
-import { ChangeEvent, useEffect, useState } from 'react'
+import { Fragment, useState } from 'react'
+import { useForm } from 'react-hook-form'
 
 import handlePowerBlocks from '../services/handlePowerBlocks'
 
 interface InputBoxProps {
   uuid: string
-  inputArr: string[]
+  inputArr: { key: string; placeholder: string }[]
   pBlkId: string
   pBlk: BlockEntity
 }
 
+type FormInputs = Record<string, string>
+
 const InputBox = ({ uuid, inputArr, pBlkId }: InputBoxProps) => {
-  const [inputValues, setInputValues] = useState<Record<string, string>>({})
+  const { register, reset, handleSubmit } = useForm<FormInputs>()
 
-  // Initialize inputValues with empty strings for all inputs
-  useEffect(() => {
-    const initialValues = inputArr.reduce(
-      (acc, inputName) => {
-        acc[inputName] = ''
-        return acc
-      },
-      {} as Record<string, string>,
-    )
-    setInputValues(initialValues)
-  }, [inputArr])
-
-  const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const onSubmit = async (data: FormInputs) => {
+    await handlePowerBlocks('button', uuid, pBlkId, data)
     logseq.hideMainUI()
-    await handlePowerBlocks('button', uuid, pBlkId, inputValues)
-    setInputValues((prevValues) => {
-      return Object.keys(prevValues).reduce(
-        (acc, key) => {
-          acc[key] = ''
-          return acc
-        },
-        {} as Record<string, string>,
-      )
-    })
-  }
-
-  const getPlaceholder = (content: string) => {
-    const regexp = /<%INPUT:(.*?)%>/
-    const matched = regexp.exec(content)
-    return matched![1]
+    reset()
   }
 
   return (
     <div id="powerblocks-input">
-      <form onSubmit={handleSubmit}>
-        {inputArr.map((i: string, index) => (
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {inputArr.map((input, index) => (
           <input
             key={index}
-            autoFocus={index === 0}
-            type="text"
-            placeholder={getPlaceholder(i)}
-            value={inputValues[i] || ''}
-            name={i}
-            onChange={(e) =>
-              setInputValues((prevValue) => ({
-                ...prevValue,
-                [e.target.name]: e.target.value,
-              }))
-            }
+            placeholder={input.placeholder}
+            {...register(input.key, { required: true })}
           />
         ))}
         <button type="submit">Submit</button>
