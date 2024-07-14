@@ -92,6 +92,29 @@ export default async function handlePowerBlocks(
         }
       }
     }
+  } else if (type === 'sticky-button') {
+    for (const block of pBlk.children) {
+      try {
+        const content = await processPowerBlock(
+          uuid,
+          block.content,
+          input ?? '',
+        )
+
+        if (content.length !== 0) {
+          const newBlock = await logseq.Editor.insertBlock(uuid, content, {
+            before: false,
+            sibling: false,
+          })
+
+          if (block.children.length > 0) {
+            await recurse(block.children, newBlock!.uuid)
+          }
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    }
   } else if (type === 'template') {
     // Process template
     for (const b of pBlk.children.reverse()) {

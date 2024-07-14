@@ -33,20 +33,28 @@ const PowerBlocksMenu = ({
     async (block: BlockEntity) => {
       const value = block.content
         .replace(
-          /#powerblocks-button|#powerblocks|collapsed:: true|collapsed:: false/g,
+          /#powerblocks-button|#powerblocks-stickybutton|#powerblocks|collapsed:: true|collapsed:: false/g,
           '',
         )
         .trim()
 
-      if (block.content.includes('#powerblocks-button')) {
-        // Insert powerblocks button
-        await logseq.Editor.insertAtEditingCursor(
-          `{{renderer :powerblocks_${uuid}, ${value}}}`,
-        )
-        await logseq.Editor.exitEditingMode(false)
-      } else if (block.content.includes('#powerblocks')) {
-        // Insert powerblocks template
-        await handlePowerBlocks('template', uuid, value)
+      switch (true) {
+        case /#powerblocks-stickybutton/.test(block.content):
+          await logseq.Editor.insertAtEditingCursor(
+            `{{renderer :powerblockssticky_${uuid}, ${value}}}`,
+          )
+          await logseq.Editor.exitEditingMode(false)
+          break
+        case /#powerblocks-button/.test(block.content):
+          await logseq.Editor.insertAtEditingCursor(
+            `{{renderer :powerblocks_${uuid}, ${value}}}`,
+          )
+          await logseq.Editor.exitEditingMode(false)
+          break
+        case /#powerblocks/.test(block.content):
+          await handlePowerBlocks('template', uuid, value)
+          break
+        default:
       }
       setSearchInput('')
       setSelectedIndex(0)
@@ -102,7 +110,7 @@ const PowerBlocksMenu = ({
           const icon = b.content.includes('#powerblocks-button') ? '⌘' : '📄'
           const content = b.content
             .replace(
-              /#powerblocks-button|#powerblocks|collapsed:: true|collapsed:: false/g,
+              /#powerblocks-button|#powerblocks-stickybutton|#powerblocks|collapsed:: true|collapsed:: false/g,
               '',
             )
             .trim()
