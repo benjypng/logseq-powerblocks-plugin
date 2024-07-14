@@ -2,14 +2,13 @@ Sponsor this project on [Github](https://github.com/sponsors/hkgnp) or [get me a
 
 # Overview
 
-This plugin was created as I had some unique workflows that Logseq templates were not able to support. It allows the creation of 2 types of "PowerBlocks":
+This plugin was created as I had some unique workflows that Logseq templates were not able to support. It allows the creation of 3 types of "PowerBlocks":
 
+1. Sticky button templates (buttons that remain on the page)
 1. Button templates
 2. Normal templates
 
 Button templates allow the adding of templates using a button, while normal templates work like regular templates. A list of supported syntaxes can be found below.
-
-_Note: This plugin is still in alpha stage and will not be accepting any PRs. Please include any feature request as a Github issue._
 
 ![](screenshots/demo.gif)
 
@@ -17,9 +16,14 @@ _Note: This plugin is still in alpha stage and will not be accepting any PRs. Pl
 
 ## Creating the PowerBlocks
 
-1. From anywhere in Logseq, create a block like the below. `#powerblocks` and `#powerblocks-button` cannot be changed.
+1. From anywhere in Logseq, create a block like the below. `#powerblocks`, `#powerblocks-stickybutton` and `#powerblocks-button` cannot be changed.
 
 ```markdown
+### To create a sticky button template
+
+- Buy milk #powerblocks-stickybutton
+  - Today is <%DATE:5 days later%>
+
 ### To create a button template
 
 - Buy milk #powerblocks-button
@@ -36,7 +40,7 @@ _Note: This plugin is still in alpha stage and will not be accepting any PRs. Pl
 ## Using the PowerBlocks
 
 1. Trigger the PowerBlocks menu by typing `/Insert PowerBlock`
-2. Select either a button template (⏺ ) or a normal template (📃) that you have created.
+2. Select either a button/sticky button template (⏺ ) or a normal template (📃) that you have created.
 3. Button templates can be used within a Logseq template if you prefer..
 
 # Syntaxes (General)

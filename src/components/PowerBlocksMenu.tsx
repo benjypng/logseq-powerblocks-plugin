@@ -99,7 +99,11 @@ const PowerBlocksMenu = ({
       />
       <div className="powerblocks-section">
         {data.map((b, index) => {
-          const icon = b.content.includes('#powerblocks-button') ? '⌘' : '📄'
+          const icon =
+            b.content.includes('#powerblocks-button') ||
+            b.content.includes('#powerblocks-stickybutton')
+              ? '⌘'
+              : '📄'
           const content = b.content
             .replace(
               /#powerblocks-button|#powerblocks|collapsed:: true|collapsed:: false/g,
