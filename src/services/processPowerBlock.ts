@@ -1,104 +1,110 @@
-import getTime from "../utils/getTime";
-import { getDayInText } from "logseq-dateutils";
-import { getWeek, getWeekOfMonth } from "date-fns";
-import getPageName from "./getPageName";
-import { handleAndOr } from "../libs/handleAndOr";
-import { handleIfDayOfWeek } from "../libs/handleIfDayOfWeek";
-import { handleIfDate } from "../libs/handleIfDate";
-import { handleIfYear } from "../libs/handleIfYear";
-import { handleIfWeekOfMonth } from "../libs/handleIfWeekOfMonth";
-import { handleIfWeekOfYear } from "../libs/handleIfWeekOfYear";
-import { checkDate } from "../libs/checkDate";
-import { checkWeeksSinceDate } from "../libs/checkWeeksSinceDate";
-import { handleRandomTag } from "../libs/handleRandomTag";
-import { checkSum } from "../libs/checkSum";
-import { sidebarOpen } from "../libs/sidebarOpen";
-import { getProperty } from "../libs/getProperty";
-import { handleInlinePowerblocks } from "../libs/handleInlinePowerblocks";
+import { format, getWeek, getWeekOfMonth } from 'date-fns'
+
+import { checkDate } from '../libs/checkDate'
+import { checkSum } from '../libs/checkSum'
+import { checkWeeksSinceDate } from '../libs/checkWeeksSinceDate'
+import { getProperty } from '../libs/getProperty'
+import { handleAndOr } from '../libs/handleAndOr'
+import { handleIfDate } from '../libs/handleIfDate'
+import { handleIfDayOfWeek } from '../libs/handleIfDayOfWeek'
+import { handleIfWeekOfMonth } from '../libs/handleIfWeekOfMonth'
+import { handleIfWeekOfYear } from '../libs/handleIfWeekOfYear'
+import { handleIfYear } from '../libs/handleIfYear'
+import { handleInlinePowerblocks } from '../libs/handleInlinePowerblocks'
+import { handleRandomTag } from '../libs/handleRandomTag'
+import { sidebarOpen } from '../libs/sidebarOpen'
+import getTime from '../utils/getTime'
+import { getGraphUrl } from './getGraphUrl'
+import getPageName from './getPageName'
+import { getRandomPage } from './getRandomPage'
 
 export default async function processPowerBlock(
   uuid: string,
   content: string,
-  input?: string,
+  input?: Record<string, string> | string,
 ) {
-  if (input && input !== "") {
-    if (content.includes("<%INPUT:") && content.includes("%>")) {
+  if (input && input !== '') {
+    if (content.includes('<%INPUT:') && content.includes('%>')) {
       Object.entries(input).map(
         (i) => (content = content.replace(i[0], i[1].toString())),
-      );
+      )
     }
   }
 
-  // TODO: Convert to function so that the same content can be parsed through all the various methods.
-  // This can also be used in the kanban and tablerender plugins?
-  content = handleAndOr(content);
+  // Handle templates with params
+  content = handleAndOr(content)
 
-  content = handleIfDayOfWeek(content);
+  content = handleIfDayOfWeek(content)
 
-  content = handleIfDate(content);
+  content = handleIfDate(content)
 
-  content = handleIfYear(content);
+  content = handleIfYear(content)
 
-  content = handleIfWeekOfMonth(content);
+  content = handleIfWeekOfMonth(content)
 
-  content = handleIfWeekOfYear(content);
+  content = handleIfWeekOfYear(content)
 
-  content = await checkDate(content);
+  content = await checkDate(content)
 
-  content = checkWeeksSinceDate(content);
+  content = checkWeeksSinceDate(content)
 
-  content = await handleRandomTag(content);
+  content = await handleRandomTag(content)
 
-  content = checkSum(content);
+  content = checkSum(content)
 
-  content = sidebarOpen(content);
+  content = sidebarOpen(content)
 
-  content = await getProperty(content);
+  content = await getProperty(content)
 
-  // Handle replacement of template strings
+  // Handle templates without params
   const templateStrArr = [
     {
-      tKey: "<%TIME%>",
+      tKey: '<%TIME%>',
       tValue: getTime(),
-      type: "replace",
+      type: 'replace',
     },
     {
-      tKey: "<%TIMEAMPM%>",
-      tValue: getTime("ampm"),
-      type: "replace",
+      tKey: '<%TIMEAMPM%>',
+      tValue: getTime('ampm'),
+      type: 'replace',
     },
     {
-      tKey: "<%DAY%>",
-      tValue: getDayInText(new Date()),
-      type: "replace",
+      tKey: '<%DAY%>',
+      tValue: format(new Date(), 'EEEE'),
+      type: 'replace',
     },
     {
-      tKey: "<%WEEK%>",
+      tKey: '<%WEEK%>',
       tValue: getWeek(new Date()),
-      type: "replace",
+      type: 'replace',
     },
     {
-      tKey: "<%WEEKOFMONTH%>",
+      tKey: '<%WEEKOFMONTH%>',
       tValue: getWeekOfMonth(new Date()),
-      type: "replace",
+      type: 'replace',
     },
     {
-      tKey: "<%CURRENTPAGENAME%>",
+      tKey: '<%CURRENTPAGENAME%>',
       tValue: await getPageName(uuid),
-      type: "replace",
+      type: 'replace',
     },
     {
-      tKey: "<%CURRENTPAGEURL%>",
-      tValue: `logseq://graph/logseq?page=${await getPageName(uuid)}`,
-      type: "replace",
+      tKey: '<%CURRENTPAGEURL%>',
+      tValue: `${await getGraphUrl()}?page=${encodeURIComponent(await getPageName(uuid))}`,
+      type: 'replace',
     },
-  ];
+    {
+      tKey: `<%RANDOMPAGE%>`,
+      tValue: await getRandomPage(),
+      type: 'replace',
+    },
+  ]
 
   for (const t of templateStrArr) {
-    content = content.replaceAll(t.tKey, t.tValue as string);
+    content = content.replaceAll(t.tKey, t.tValue as string)
   }
 
-  content = handleInlinePowerblocks(content);
+  content = handleInlinePowerblocks(content, uuid)
 
-  return content;
+  return content
 }

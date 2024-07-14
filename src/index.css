@@ -1,0 +1,14 @@
+.powerblocks-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  border: 1px solid;
+  border-radius: 8px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.powerblocks-btn:hover {
+  background-color: var(--rx-blue-04);
+}

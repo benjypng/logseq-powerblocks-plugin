@@ -1,26 +1,24 @@
-export default function handleClosePopup() {
+export const handlePopup = () => {
   //ESC
   document.addEventListener(
-    "keydown",
-    function (e) {
-      if (e.key === "Escape") {
-        logseq.hideMainUI({ restoreEditingCursor: true });
+    'keydown',
+    (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        logseq.hideMainUI({ restoreEditingCursor: true })
       } else {
-        (
-          document.querySelector("#powerblocks-menu")!
-            .firstElementChild as HTMLElement
-        ).focus();
+        const menuElement = document.querySelector('#powerblocks-menu')
+        if (menuElement) {
+          ;(menuElement.firstElementChild as HTMLElement)?.focus()
+        }
       }
-
-      e.stopPropagation();
+      e.stopPropagation()
     },
     false,
-  );
-
-  // Click
-  document.addEventListener("click", (e) => {
-    if (!(e.target as HTMLElement).closest("body")) {
-      logseq.hideMainUI({ restoreEditingCursor: true });
+  )
+  document.addEventListener('click', (e) => {
+    if (!(e.target as HTMLElement).closest('body')) {
+      logseq.hideMainUI({ restoreEditingCursor: true })
     }
-  });
+    e.stopPropagation()
+  })
 }

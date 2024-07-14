@@ -1,4 +1,5 @@
 import "@logseq/libs";
+
 import { SettingSchemaDesc } from "@logseq/libs/dist/LSPlugin.user";
 
 const settings: SettingSchemaDesc[] = [
