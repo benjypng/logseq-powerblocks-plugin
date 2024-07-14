@@ -110,7 +110,7 @@ const PowerBlocksMenu = ({
           const icon =
             b.content.includes('#powerblocks-button') ||
             b.content.includes('#powerblocks-stickybutton')
-              ? '⌘'
+              ? '🔘'
               : '📄'
           const content = b.content
             .replace(
