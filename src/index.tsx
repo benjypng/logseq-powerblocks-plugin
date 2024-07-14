@@ -52,7 +52,13 @@ const main = async () => {
   logseq.App.onMacroRendererSlotted(
     async ({ slot, payload: { uuid, arguments: args } }) => {
       const [type, pBlkId] = args
-      if (!type || !type.startsWith(':powerblocks_') || !pBlkId) return
+      if (
+        !type ||
+        (!type.startsWith(':powerblockssticky_') &&
+          !type.startsWith(':powerblocks_')) ||
+        !pBlkId
+      )
+        return
       const slotId = `${pBlkId}_${uuid}_${slot}`
 
       logseq.provideModel({
@@ -86,7 +92,11 @@ const main = async () => {
             )
             logseq.showMainUI()
           } else {
-            handlePowerBlocks('button', uuid, pBlkId)
+            if (type.startsWith(':powerblocks_')) {
+              handlePowerBlocks('button', uuid, pBlkId)
+            } else if (type.startsWith(':powerblockssticky_')) {
+              handlePowerBlocks('sticky-button', uuid, pBlkId)
+            }
           }
         },
       })
