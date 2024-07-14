@@ -67,10 +67,10 @@ Below is the list of available syntaxes. I may consider adding to the list, but 
 - `<%RANDOMTAG:quotes%>`
   Use this syntax to get a random block that is tagged. In the above example, it will return a random block that is tagged with "quotes", or belongs to a page called "quotes".
 
-- `<$CURRENTPAGENAME%>`
+- `<%CURRENTPAGENAME%>`
   Get the name of the page that this syntax is being used at.
 
-- `<$CURRENTPAGEURL%>`
+- `<%CURRENTPAGEURL%>`
   Get the Logseq URL of the page that this syntax is being used at.
 
 - `<%WEEKSSINCEDATE:28 Feb 1990%>`
