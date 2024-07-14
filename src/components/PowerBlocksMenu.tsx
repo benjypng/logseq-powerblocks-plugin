@@ -41,13 +41,15 @@ const PowerBlocksMenu = ({
       if (block.content.includes('#powerblocks-button')) {
         // Insert powerblocks button
         await logseq.Editor.insertAtEditingCursor(
-          `{{renderer :powerblocks_, ${value}}}`,
+          `{{renderer :powerblocks_${uuid}, ${value}}}`,
         )
         await logseq.Editor.exitEditingMode(false)
       } else if (block.content.includes('#powerblocks')) {
         // Insert powerblocks template
         await handlePowerBlocks('template', uuid, value)
       }
+      setSearchInput('')
+      setSelectedIndex(0)
       logseq.hideMainUI()
     },
     [uuid],

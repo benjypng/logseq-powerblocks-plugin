@@ -25,6 +25,7 @@ const main = async () => {
   const container = document.getElementById('app')
   if (!container) return
   const root = createRoot(container)
+
   // CREATE MENU
   await logseq.Editor.registerSlashCommand('Insert PowerBlock', async (e) => {
     const { rect } =
@@ -62,9 +63,10 @@ const main = async () => {
           const findInput = (blocks: BlockEntity[]) => {
             for (const block of blocks) {
               const inputBlock = /<%INPUT:(.+?)%>/.exec(block.content)
+              console.log(inputBlock)
               if (inputBlock) {
                 inputArr.push({
-                  key: block.content,
+                  key: inputBlock[0]!,
                   placeholder: inputBlock[1]!,
                 })
               }

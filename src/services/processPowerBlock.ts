@@ -19,7 +19,7 @@ import getPageName from './getPageName'
 export default async function processPowerBlock(
   uuid: string,
   content: string,
-  input?: string,
+  input?: Record<string, string> | string,
 ) {
   if (input && input !== '') {
     if (content.includes('<%INPUT:') && content.includes('%>')) {
@@ -97,7 +97,7 @@ export default async function processPowerBlock(
     content = content.replaceAll(t.tKey, t.tValue as string)
   }
 
-  content = handleInlinePowerblocks(content)
+  content = handleInlinePowerblocks(content, uuid)
 
   return content
 }

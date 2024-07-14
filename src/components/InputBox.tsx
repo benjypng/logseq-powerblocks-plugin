@@ -16,6 +16,7 @@ interface InputBoxProps {
 type FormInputs = Record<string, string>
 
 const InputBox = ({ uuid, inputArr, pBlkId }: InputBoxProps) => {
+  console.log(inputArr)
   const {
     register,
     reset,
