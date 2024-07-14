@@ -1,4 +1,4 @@
-import { getWeek, getWeekOfMonth } from 'date-fns'
+import { format, getWeek, getWeekOfMonth } from 'date-fns'
 
 import { checkDate } from '../libs/checkDate'
 import { checkSum } from '../libs/checkSum'
@@ -15,6 +15,7 @@ import { handleRandomTag } from '../libs/handleRandomTag'
 import { sidebarOpen } from '../libs/sidebarOpen'
 import getTime from '../utils/getTime'
 import getPageName from './getPageName'
+import { getGraphUrl } from './getGraphUrl'
 
 export default async function processPowerBlock(
   uuid: string,
@@ -66,11 +67,11 @@ export default async function processPowerBlock(
       tValue: getTime('ampm'),
       type: 'replace',
     },
-    //{
-    //  tKey: '<%DAY%>',
-    //  tValue: getDayInText(new Date()),
-    //  type: 'replace',
-    //},
+    {
+      tKey: '<%DAY%>',
+      tValue: format(new Date(), 'EEEE'),
+      type: 'replace',
+    },
     {
       tKey: '<%WEEK%>',
       tValue: getWeek(new Date()),
@@ -88,7 +89,7 @@ export default async function processPowerBlock(
     },
     {
       tKey: '<%CURRENTPAGEURL%>',
-      tValue: `logseq://graph/logseq?page=${await getPageName(uuid)}`,
+      tValue: `${await getGraphUrl()}?page=${encodeURIComponent(await getPageName(uuid))}`,
       type: 'replace',
     },
   ]
