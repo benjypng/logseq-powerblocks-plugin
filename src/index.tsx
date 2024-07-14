@@ -56,14 +56,13 @@ const main = async () => {
       const slotId = `${pBlkId}_${uuid}_${slot}`
 
       logseq.provideModel({
-        [`pb-${slot}`]: async function () {
+        [`pb-${slot}`]: async () => {
           const { pBlk } = await getPowerBlocks(pBlkId)
           // Recursively go through all child blocks of the power block and locate an input block. If there is an input block, popup an Input and pass the content below
           const inputArr: { key: string; placeholder: string }[] = []
           const findInput = (blocks: BlockEntity[]) => {
             for (const block of blocks) {
               const inputBlock = /<%INPUT:(.+?)%>/.exec(block.content)
-              console.log(inputBlock)
               if (inputBlock) {
                 inputArr.push({
                   key: inputBlock[0]!,
