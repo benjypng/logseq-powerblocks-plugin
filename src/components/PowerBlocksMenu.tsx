@@ -43,16 +43,17 @@ const PowerBlocksMenu = ({
           await logseq.Editor.insertAtEditingCursor(
             `{{renderer :powerblockssticky_${uuid}, ${value}}}`,
           )
-          await logseq.Editor.exitEditingMode(false)
+          await logseq.Editor.exitEditingMode(true)
           break
         case /#powerblocks-button/.test(block.content):
           await logseq.Editor.insertAtEditingCursor(
             `{{renderer :powerblocks_${uuid}, ${value}}}`,
           )
-          await logseq.Editor.exitEditingMode(false)
+          await logseq.Editor.exitEditingMode(true)
           break
         case /#powerblocks/.test(block.content):
           await handlePowerBlocks('template', uuid, value)
+          await logseq.Editor.exitEditingMode(true)
           break
         default:
       }
