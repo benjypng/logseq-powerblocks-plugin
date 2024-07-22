@@ -17,6 +17,7 @@ import getTime from '../utils/getTime'
 import { getGraphUrl } from './getGraphUrl'
 import getPageName from './getPageName'
 import { getRandomPage } from './getRandomPage'
+import { handleIfDateOfMonth } from '../libs/handleIfDateOfMonth'
 
 export default async function processPowerBlock(
   uuid: string,
@@ -43,6 +44,8 @@ export default async function processPowerBlock(
   content = handleIfWeekOfMonth(content)
 
   content = handleIfWeekOfYear(content)
+
+  content = handleIfDateOfMonth(content)
 
   content = await checkDate(content)
 

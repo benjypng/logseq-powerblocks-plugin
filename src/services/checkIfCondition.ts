@@ -1,5 +1,5 @@
 import * as chrono from 'chrono-node'
-import { getWeek, getWeekOfMonth } from 'date-fns'
+import { getDate, getWeek, getWeekOfMonth } from 'date-fns'
 
 import getDateInYYYYMMDD from '../utils/getDateInYYYYMMDD'
 
@@ -10,6 +10,7 @@ export default function checkIfCondition(matched: string, nlp?: boolean) {
     ['IFYEAR']: 'year',
     ['IFWEEKOFMONTH']: 'weekofmonth',
     ['IFWEEKOFYEAR']: 'weekofyear',
+    ['IFDATEOFMONTH']: 'dateofmonth',
   }
 
   if (!nlp) {
@@ -34,6 +35,10 @@ export default function checkIfCondition(matched: string, nlp?: boolean) {
 
       case 'weekofyear':
         comparator = getWeek(new Date())
+        break
+
+      case 'dateofmonth':
+        comparator = getDate(new Date())
         break
 
       default:

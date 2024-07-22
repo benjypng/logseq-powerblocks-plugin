@@ -102,6 +102,9 @@ Below is the list of syntaxes that rely on conditions specified. Blocks with the
 - `<%IFDATE:tomorrow%>`
   Block containing this syntax will only be added if the date mentioned in the block matches the current date.
 
+- `<%IFDATEOFMONTH:15%>`
+  Block containing this syntax will only be added if the date mentioned in the block matches the current date of every month.
+
 ### AND / OR Conditions
 
 You can use AND OR conditions with the above conditional syntaxes. Below are some examples on how you can use it.
