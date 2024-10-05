@@ -22,7 +22,7 @@ export default function checkIfCondition(matched: string, nlp?: boolean) {
         break
 
       case 'month':
-        comparator = new Date().getMonth()
+        comparator = new Date().getMonth() + 1
         break
 
       case 'year':
