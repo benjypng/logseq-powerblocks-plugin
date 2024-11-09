@@ -6,6 +6,8 @@ export const handleIfMonthOfYear = (content: string): string => {
     const matched = regexp.exec(content)
     if (!matched || !matched[1]) return content
 
+    console.log(checkIfCondition(matched[1]))
+
     if (checkIfCondition(matched[1])) {
       return content.replaceAll(matched![0], '')
     } else {

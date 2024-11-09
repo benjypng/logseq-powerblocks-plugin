@@ -6,7 +6,9 @@ import { checkWeeksSinceDate } from '../libs/checkWeeksSinceDate'
 import { getProperty } from '../libs/getProperty'
 import { handleAndOr } from '../libs/handleAndOr'
 import { handleIfDate } from '../libs/handleIfDate'
+import { handleIfDateOfMonth } from '../libs/handleIfDateOfMonth'
 import { handleIfDayOfWeek } from '../libs/handleIfDayOfWeek'
+import { handleIfMonthOfYear } from '../libs/handleIfMonthOfYear'
 import { handleIfWeekOfMonth } from '../libs/handleIfWeekOfMonth'
 import { handleIfWeekOfYear } from '../libs/handleIfWeekOfYear'
 import { handleIfYear } from '../libs/handleIfYear'
@@ -17,8 +19,6 @@ import getTime from '../utils/getTime'
 import { getGraphUrl } from './getGraphUrl'
 import getPageName from './getPageName'
 import { getRandomPage } from './getRandomPage'
-import { handleIfDateOfMonth } from '../libs/handleIfDateOfMonth'
-import { handleIfMonthOfYear } from '../libs/handleIfMonthOfYear'
 
 export default async function processPowerBlock(
   uuid: string,
@@ -105,6 +105,8 @@ export default async function processPowerBlock(
       type: 'replace',
     },
   ]
+
+  console.log('CONTENT', content)
 
   for (const t of templateStrArr) {
     content = content.replaceAll(t.tKey, t.tValue as string)
