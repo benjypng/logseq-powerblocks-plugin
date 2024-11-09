@@ -106,8 +106,6 @@ export default async function processPowerBlock(
     },
   ]
 
-  console.log('CONTENT', content)
-
   for (const t of templateStrArr) {
     content = content.replaceAll(t.tKey, t.tValue as string)
   }
