@@ -25,15 +25,27 @@ const InputBox = ({ uuid, inputArr, pBlkId }: InputBoxProps) => {
   } = useForm<FormInputs>()
 
   useEffect(() => {
-    ;(async () => {
+    const getClipboard = async () => {
       const clipboardContent = await window.navigator.clipboard.readText()
       if (clipboardContent == '' || !inputArr[0]) return
       setValue(inputArr[0].key, clipboardContent)
-    })()
+    }
+    getClipboard()
   }, [])
 
   const onSubmit = async (data: FormInputs) => {
-    await handlePowerBlocks('button', uuid, pBlkId, data)
+    if (data.input?.startsWith('((') && data.input?.endsWith('))')) {
+      // do something
+      const blk = await logseq.Editor.getBlock(data.input.slice(2, -2))
+      if (!blk) return
+
+      await handlePowerBlocks('button', uuid, pBlkId, {
+        input: blk.content,
+      })
+    } else {
+      await handlePowerBlocks('button', uuid, pBlkId, data)
+    }
+
     logseq.hideMainUI()
     reset()
   }
